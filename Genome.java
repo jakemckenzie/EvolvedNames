@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.Collector;
 
 public class Genome {
     /**
@@ -35,5 +36,22 @@ public class Genome {
         privateMutationRate = mutationRate;
         geneticSet = new ArrayList<Character>();
         geneticSet.add('A');
-      }
+      
+    }
+    /**
+     * A copy constructor that initializes a Genome with the same values
+     * as the input gene.
+     * @param gene This genome allows the driver to pass the gene from inside the driver.
+     */
+    public Genome(Genome gene) {
+
+        privateMutationRate = gene.privateMutationRate;
+        geneticSet = new ArrayList<Character>();
+        //for (Character c : gene.geneticSet) geneticSet.add(c);
+        //Stream.of(gene.geneticSet).forEach(value -> geneticSet.add(value)); 
+        geneticSet.addAll(gene.geneticSet);
+        //geneticSet = gene.geneticSet.stream().collect(Collectors.toList());
+    }
+
+
 }
