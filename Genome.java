@@ -1,5 +1,6 @@
 import java.util.*;
 import java.util.stream.Collector;
+import java.util.stream.Stream;
 
 public class Genome {
 	/**
@@ -88,12 +89,36 @@ public class Genome {
     
     /**
      * @return This returns a boolean which is only true if the probability of a trial is less than the given mutation rate.
+     * https://www.mkyong.com/java/java-generate-random-integers-in-a-range/
      */
 
     private boolean randomTrial() {
 
         return (urn.ints(0,101).findFirst().getAsInt() <= (privateMutationRate * 100));
 
+    }
+    /**
+     * This function will update the current Genome by crossing it over with other.
+     * @param other this gene from the controller is crossed with the gene in the genome
+     */
+
+    public void crossover(Genome other) {
+
+        int geneLength = Math.min(geneticSet.size(),other.geneticSet.size());
+        final ArrayList<Character> temp = new ArrayList<Character>(geneLength);
+
+        //for (int i = 0 ; i < geneLength; i++) {
+            
+         //   temp.add((i-> (urn.nextBoolean() ? other.geneticSet.get(i) : geneticSet.get(i))));
+           
+        //}
+        for (int i = 0; i < geneLength; i++) {
+            if (urn.nextBoolean()) {
+                temp.add(other.geneticSet.get(i));                
+            } else {
+                temp.add(geneticSet.get(i));
+            }
+        }
     }
 
 }
