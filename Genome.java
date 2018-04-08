@@ -105,20 +105,20 @@ public class Genome {
     public void crossover(Genome other) {
 
         int geneLength = Math.min(geneticSet.size(),other.geneticSet.size());
-        final ArrayList<Character> temp = new ArrayList<Character>(geneLength);
+        ArrayList<Character> temp = new ArrayList<Character>(geneLength);
 
-        //for (int i = 0 ; i < geneLength; i++) {
-            
-         //   temp.add((i-> (urn.nextBoolean() ? other.geneticSet.get(i) : geneticSet.get(i))));
-           
-        //}
-        for (int i = 0; i < geneLength; i++) {
+        for (int i = 0 ; i < geneLength; i++) {
+            //char c = urn.nextBoolean() ? other.geneticSet.get(i) : geneticSet.get(i);
+            temp.add(urn.nextBoolean() ? other.geneticSet.get(i) : geneticSet.get(i));
+        }
+        /*for (int i = 0; i < geneLength; i++) {
             if (urn.nextBoolean()) {
                 temp.add(other.geneticSet.get(i));                
             } else {
                 temp.add(geneticSet.get(i));
             }
-        }
+        }*/
+        geneticSet = temp;
     }
 
 }
