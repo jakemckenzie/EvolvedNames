@@ -2,7 +2,7 @@ import java.util.*;
 import java.util.stream.Collector;
 
 public class Genome {
-    /**
+	/**
      * The target string is my instructor's name.
      */
     
@@ -12,13 +12,15 @@ public class Genome {
      * The urn used for most randomness used within this class.
      */
 
-    private final Random urn = new Random();
+    private final Random urn = new Random(System.currentTimeMillis());
 
     /**
      * The set of characters that is allowed in this universe for evolution.
      */
     
-    public static ArrayList<Character> set = new ArrayList<Character>(Arrays.asList('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' ', '-', '\''));
+    public static ArrayList<Character> set = new ArrayList<Character>(Arrays.asList('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 
+                                                                                    'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 
+                                                                                    'W', 'X', 'Y', 'Z', ' ', '-', '\''));
     /**
      * This is the main genetic set used for evolution. We will evolve it to obtain the target.
      * Typicaly List is chosen for this but for random access and other libraries specific to
