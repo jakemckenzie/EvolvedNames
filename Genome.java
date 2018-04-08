@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class Genome {
     /**
      * The target string is my instructor's name.
@@ -8,8 +10,8 @@ public class Genome {
     /**
      * The set of characters that is allowed in this universe for evolution.
      */
-    public static List<Character> set = Arrays.asList('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
-            'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' ', '-', '\'');
+    public static List<Character> set = new ArrayList<Character>(Arrays.asList('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
+            'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' ', '-', '\''));
     /**
      * The mutation rate for the evolution in this universe. 
      */
@@ -26,7 +28,7 @@ public class Genome {
 
       public Genome(double mutationRate){
         privateMutationRate = mutationRate;
-        genomeSet = new Arraylist<Character>();
+        genomeSet = new ArrayList<Character>();
         genomeSet.add('A');
       }
 }
