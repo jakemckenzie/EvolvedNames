@@ -10,11 +10,7 @@ public class Genome {
     /**
      * The set of characters that is allowed in this universe for evolution.
      */
-<<<<<<< HEAD
     public static ArrayList<Character> set = new ArrayList<Character>(Arrays.asList('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
-=======
-    public static List<Character> set = new ArrayList<Character>(Arrays.asList('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
->>>>>>> 84d22421d482d9d9f4520aeb7bb777678c72e7dc
             'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' ', '-', '\''));
     /**
      * This is the main genetic set used for evolution. We will evolve it to obtain the target.
@@ -37,27 +33,7 @@ public class Genome {
     public Genome(double mutationRate){
 
         privateMutationRate = mutationRate;
-<<<<<<< HEAD
         geneticSet = new ArrayList<Character>();
         geneticSet.add('A');
-      
-    }
-    /**
-     * A copy constructor that initializes a Genome with the same values
-     * as the input gene.
-     * @param gene This genome allows the driver to pass the gene from inside the driver.
-     */
-    public Genome(Genome gene) {
-
-        privateMutationRate = gene.privateMutationRate;
-        geneticSet = new ArrayList<Character>();
-        for (Character c : gene.geneticSet) geneticSet.add(c); 
-    }
-
-
-=======
-        genomeSet = new ArrayList<Character>();
-        genomeSet.add('A');
       }
->>>>>>> 84d22421d482d9d9f4520aeb7bb777678c72e7dc
 }
