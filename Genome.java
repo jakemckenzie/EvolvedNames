@@ -25,20 +25,19 @@ public class Genome {
      * Typicaly List is chosen for this but for random access and other libraries specific to
      * ArrayLists I chose that. Hopefully that pans out to a better time complexity.
      */
-    private ArrayList<Character> geneticSet;
+    private ArrayList<Character> geneticSet = new ArrayList<Character>();;
     /**
      * The mutation rate for the evolution in this universe. 
      */
-    private double privateMutationRate;
+    private double mutRate;
     /**
       * A constructor that initializes a Genome with value ‘A’ and assigns 
       * the internal mutation rate. 
       * @param mutationRate The mutationRate must be between zero and one.
       */
 
-    public Genome(double mutationRate){
-        privateMutationRate = mutationRate;
-        geneticSet = new ArrayList<Character>();
+    public void Genome(double mutationRate){
+        mutRate = mutationRate;
         geneticSet.add(set.get(0));
     }
     /**
@@ -46,8 +45,8 @@ public class Genome {
      * as the input gene.
      * @param gene This genome allows the driver to pass the gene from inside the driver.
      */
-    public Genome(Genome gene) {
-        privateMutationRate = gene.privateMutationRate;
+    public void Genome(Genome gene) {
+        mutRate = gene.mutRate;
         geneticSet = new ArrayList<Character>();
         //for (Character c : gene.geneticSet) geneticSet.add(c);
         //Stream.of(gene.geneticSet).forEach(value -> geneticSet.add(value)); 
@@ -80,7 +79,7 @@ public class Genome {
      */
 
     private boolean randomTrial() {
-        return (urn.ints(0,101).findFirst().getAsInt() <= (privateMutationRate * 100));
+        return (urn.ints(0,101).findFirst().getAsInt() <= (mutRate * 100));
     }
     /**
      * This function will update the current Genome by crossing it over with other.
@@ -152,6 +151,7 @@ public class Genome {
      * https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#C
      * @param a The current character set.
      * @param b The targert character set.
+     * @return returns the levenshtein distance.
      */
 
     public int levenshteinDistance(ArrayList<Character> a,ArrayList<Character> b) {
