@@ -2,8 +2,6 @@ import java.util.*;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
-import sun.swing.MenuItemLayoutHelper.ColumnAlignment;
-
 public class Genome {
 	/**
      * The target string is my instructor's name.
@@ -134,12 +132,12 @@ public class Genome {
 
         int n = geneticSet.size();
         int m = target.size();
-        int m_n = m - n;
-        int shift = m_n >> 31;
+        //int m_n = m - n;
+        //int shift = m_n >> 31;
         //int mask = m_n >> 4 * 2 - 1;
         int L = n ^((n ^ m) & -(n < m ? 1: 0));//max
         //int f = (m_n + mask) ^ mask;//absolute value
-        int f = (m_n ^ shift) - (shift);//absolute value
+        //int f = (m_n ^ shift) - (shift);//absolute value
         //int[][] D = new int[n + 1][m + 1];
         int i = 1;
         //Should initialize the array in O(L) instead of O(n) and O(m) but
@@ -148,7 +146,23 @@ public class Genome {
         Integer[][] D = new Integer[n + 1][m + 1];
         for (int a = 0 ; a <= n ; a++) D[a][0] = a;
         for (int b = 0 ; b <= m ; b++) D[0][b] = b;
-        return f;
+
+        for (int r = 1 ; r <= n ; r++) {
+            for (int c = 1 ; c <= m ; c++) {
+                D[r][c] = (geneticSet.get(r - 1) == target.get(c - 1)) ? D[r - 1][c - 1]:min(min(D[r - 1][c] + 1,D[r][c - 1] + 1),D[r - 1][c - 1] + 1);
+            }
+        }
+        return D[n][m] + (abs_diff(n,m) + 1) / 2;
+    }
+
+    public int min(int a, int b) {
+        return b ^ ((a ^ b) & -((a < b) ? 1 : 0));
+    }
+
+    public int abs_diff(int a, int b) {
+        int a_b = a - b;
+        int shift = a_b >> 31;
+        return (a_b ^ shift) - (shift);
     }
     /*public Integer[][] foo(int row, int column) {
 
@@ -159,5 +173,13 @@ public class Genome {
                         .toArray(Integer[][]::new);
 
     }*/
+    /**
+     * This function will display the Genome’s character string and fitness in an easy to read format.
+     */
+    public String toString(ArrayList<Character> charForString) {
+        StringBuilder builder = new StringBuilder(charForString.size());
+        for (Character c : charForString) builder.append(c);
+        return builder.toString();
+    }
 
 }
