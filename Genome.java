@@ -7,8 +7,10 @@ public class Genome {
      * The target string is my instructor's name.
      */
     
-    private static final String target = "CHRISTOPHER PAUL MARRIOTT";
-
+    //private static final String target = "CHRISTOPHER PAUL MARRIOTT";
+    private static final ArrayList<Character> target = new ArrayList<Character>(Arrays.asList('C','H','R','I','S','T','O','P','H','E','R',' ',
+                                                                                              'P','A','U','L',' ',
+                                                                                              'M','A','R','R','I','O','T','T'));
     /**
      * The urn used for most randomness used within this class.
      */
@@ -106,19 +108,38 @@ public class Genome {
 
         int geneLength = Math.min(geneticSet.size(),other.geneticSet.size());
         ArrayList<Character> temp = new ArrayList<Character>(geneLength);
-
-        for (int i = 0 ; i < geneLength; i++) {
-            //char c = urn.nextBoolean() ? other.geneticSet.get(i) : geneticSet.get(i);
-            temp.add(urn.nextBoolean() ? other.geneticSet.get(i) : geneticSet.get(i));
-        }
-        /*for (int i = 0; i < geneLength; i++) {
-            if (urn.nextBoolean()) {
-                temp.add(other.geneticSet.get(i));                
-            } else {
-                temp.add(geneticSet.get(i));
-            }
-        }*/
+        for (int i = 0 ; i < geneLength; i++) temp.add(urn.nextBoolean() ? other.geneticSet.get(i) : geneticSet.get(i));
         geneticSet = temp;
+
+    }
+    /**
+     * Returns the fitness of the Genome calculated using the following algorithm:
+     * 
+     * Let n be the length of the current string and m the length of the target string.
+     * 
+     * Let l = max(n,m) and f = |m - n|.
+     * 
+     * For each character position 1 <= i <= l add one to f if the char
+     * in the current string is different from the character in the
+     * target string(or if one of the two chars does not exist).
+     * Otherwise add nothing to f.
+     * 
+     * For the interest of no branching and to save computations I did some bitwise operations.
+     * Even if it isn't faster it was fun to read about.
+     * http://graphics.stanford.edu/~seander/bithacks.html
+     */
+    public int fitness() {
+
+        int n = geneticSet.size();
+        int m = target.size();
+        int m_n = m - n;
+        int shift = m_n >> 31;
+        //int mask = m_n >> 4 * 2 - 1;
+        int l = n ^((n ^ m) & -(n < m ? 1: 0));//max
+        //int f = (m_n + mask) ^ mask;//absolute value
+        int f = (m_n ^ shift) - (shift);//absolute value
+        int[][] D = new int[n + 1][m + 1];
+        return f;
     }
 
 }
