@@ -2,6 +2,8 @@ import java.util.*;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
+import sun.swing.MenuItemLayoutHelper.ColumnAlignment;
+
 public class Genome {
 	/**
      * The target string is my instructor's name.
@@ -135,11 +137,27 @@ public class Genome {
         int m_n = m - n;
         int shift = m_n >> 31;
         //int mask = m_n >> 4 * 2 - 1;
-        int l = n ^((n ^ m) & -(n < m ? 1: 0));//max
+        int L = n ^((n ^ m) & -(n < m ? 1: 0));//max
         //int f = (m_n + mask) ^ mask;//absolute value
         int f = (m_n ^ shift) - (shift);//absolute value
-        int[][] D = new int[n + 1][m + 1];
+        //int[][] D = new int[n + 1][m + 1];
+        int i = 1;
+        //Should initialize the array in O(L) instead of O(n) and O(m) but
+        //I was worried that I wouldn't run on your version of Java so I took it out.
+        //Integer[][] D = foo(n + 1, m + 1);
+        Integer[][] D = new Integer[n + 1][m + 1];
+        for (int a = 0 ; a <= n ; a++) D[a][0] = a;
+        for (int b = 0 ; b <= m ; b++) D[0][b] = b;
         return f;
     }
+    /*public Integer[][] foo(int row, int column) {
+
+        return IntStream.range(1, row)
+                        .mapToObj(r -> IntStream.range(1, row)
+                        .mapToObj(c -> new Integer(r,c))
+                        .toArray(Integer[]::new))
+                        .toArray(Integer[][]::new);
+
+    }*/
 
 }
