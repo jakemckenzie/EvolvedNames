@@ -7,12 +7,12 @@ public class Population{
     /**
      * The population set for evolution. Populations (or gene pools) evolve as gene frequencies change; individual organism cannot evolve.
      * "The population is the so-called unit of evolution. Genes, individuals, and species also play a role, but it is the change in populations 
-     * that characterizes organic evolution." ~ Ernst Mayer, What evolution Is. pg 25
+     * that characterizes organic evolution." ~ Ernst Mayr, What evolution Is. pg 25
      * 
      * "Darwin made a radical break with the typological tradition of essentialism by initiating an entirely new way of thinking. What we find 
      * among living organisms, he said, are not constant classes (types), but variable populations. Every species is composed of numerous local 
      * populations. Within a population, in contrast to a class, every individual is uniquely different from every other individual" 
-     *  ~ Ernst Mayer, What evolution Is. pg 95
+     *  ~ Ernst Mayr, What evolution Is. pg 95
      */
     private ArrayList<Genome> populationSet = new ArrayList<Genome>();
     /**

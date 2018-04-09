@@ -1,15 +1,30 @@
 import java.util.*;
 //import java.util.stream.Collector;
 //import java.util.stream.Stream;
-
+/**
+ * 
+ * 
+* "Evolution is often considered as something unexpected. Wouldn't it be more natural, some
+* antievolutionists ask, if everything would always stay the same? Perhaps this was a valid 
+* question before we understood genetics, but it is no longer. In fact, the way organisms are
+* structured, evolution is inevitable. Each organism, even the simplest bacterium, has a genome,
+* consisting of thousands to many millions of base pairs. Observation has established that each base 
+* pair is subject to occasional mutation. Different populations have different mutations, and 
+* if they are isolated from each other, these populations inevitably become more different 
+* from each other from generation to generation. Even this simplest of all possible scenarios
+* represents evolution. If one adds further biological processes, such as recombination and 
+* selection, the rate of evolution accelerates exponentially. Therefore, the mere fact of the 
+* existence of genetic programs makes the assumption of a stationary world impossible. 
+* Evolution is thus a plain fact, not a conjecture or assumption." ~ Ernst Mayr, What Evolution Is pg 305
+ */
 public class Genome {
 	/**
      * The target string is my instructor's name.
      */
     //private static final String target = "CHRISTOPHER PAUL MARRIOTT";
     private  final ArrayList<Character> target = new ArrayList<Character>(Arrays.asList('C','H','R','I','S','T','O','P','H','E','R',' ',
-                                                                                              'P','A','U','L',' ',
-                                                                                              'M','A','R','R','I','O','T','T'));
+                                                                                        'P','A','U','L',' ',
+                                                                                        'M','A','R','R','I','O','T','T'));
     /**
      * The urn used for most randomness used within this class.
      */
@@ -34,9 +49,10 @@ public class Genome {
       * A constructor that initializes a Genome with value ‘A’ and assigns 
       * the internal mutation rate. 
       * @param mutationRate The mutationRate must be between zero and one.
+      * NOTE: CONSTRUCTORS DON'T NEED A RETURN TYPE
       */
 
-    public void Genome(double mutationRate){
+    public Genome(double mutationRate){
         mutRate = mutationRate;
         geneticSet.add(set.get(0));
     }
@@ -45,7 +61,7 @@ public class Genome {
      * as the input gene.
      * @param gene This genome allows the driver to pass the gene from inside the driver.
      */
-    public void Genome(Genome gene) {
+    public Genome(Genome gene) {
         mutRate = gene.mutRate;
         geneticSet = new ArrayList<Character>();
         //for (Character c : gene.geneticSet) geneticSet.add(c);
@@ -161,17 +177,17 @@ public class Genome {
         //int new_diagonal;
         int old_diagonal;
 
-        int vector[] = new int[n + 1]; 
-        for (int i = 1; i <= n; i++) vector[i] = i;
+        int delta[] = new int[n + 1]; 
+        for (int i = 1; i <= n; i++) delta[i] = i;
         for (int j = 1; j <= m; j++) {
-            vector[0] = j;
+           delta[0] = j;
             for (int k = 1, new_diagonal = j - 1 ; k <= n; k++) {
-                old_diagonal = vector[k];
-                vector[k] = min3(vector[k] + 1, vector[k - 1] + 1, new_diagonal + (a.get(j - 1) == b.get(k - 1) ? 0 : 1));
+                old_diagonal =delta[k];
+                delta[k] = min3(vector[k] + 1,delta[k - 1] + 1, new_diagonal + (a.get(j - 1) == b.get(k - 1) ? 0 : 1));
                 new_diagonal = old_diagonal;
             }
         }
-        return vector[n];
+        returndelta[n];
     }
     /**
      * Computes the minimum betwen three integers.
