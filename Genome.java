@@ -1,6 +1,6 @@
 import java.util.*;
-import java.util.stream.Collector;
-import java.util.stream.Stream;
+//import java.util.stream.Collector;
+//import java.util.stream.Stream;
 
 public class Genome {
 	/**
@@ -96,7 +96,7 @@ public class Genome {
 
     }
     /**
-     * Returns the fitness of the Genome calculated using the following algorithm:
+     * @return Returns the fitness of the Genome calculated using the following algorithm:
      * 
      * Let n be the length of the current string and m the length of the target string.
      * 
@@ -198,6 +198,7 @@ public class Genome {
     /**
      * This function will display the Genome’s character string and fitness in an easy to read format.
      * @param charForString converts current geneticSet to string for printing.
+     * @return String used for printing the fitness to cmdline
      */
     public String toString(ArrayList<Character> charForString) {
         StringBuilder builder = new StringBuilder(charForString.size());
