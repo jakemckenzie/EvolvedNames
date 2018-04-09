@@ -17,8 +17,12 @@ import java.util.*;
 * existence of genetic programs makes the assumption of a stationary world impossible. 
 * Evolution is thus a plain fact, not a conjecture or assumption." ~ Ernst Mayr, What Evolution Is pg 305
  */
-public class Genome {
-	/**
+public class Genome implements Comparable<Genome> {
+    @Override
+    public int compare(Genome a, Genome b) {
+        return (a.fitness() > b.fitness() ? 1 :(a.fitness() < b.fitness() ? -1 : 0));
+    }
+    /**
      * The target string is my instructor's name.
      */
     //private static final String target = "CHRISTOPHER PAUL MARRIOTT";
@@ -183,11 +187,11 @@ public class Genome {
            delta[0] = j;
             for (int k = 1, new_diagonal = j - 1 ; k <= n; k++) {
                 old_diagonal =delta[k];
-                delta[k] = min3(vector[k] + 1,delta[k - 1] + 1, new_diagonal + (a.get(j - 1) == b.get(k - 1) ? 0 : 1));
+                delta[k] = min3(delta[k] + 1,delta[k - 1] + 1, new_diagonal + (a.get(j - 1) == b.get(k - 1) ? 0 : 1));
                 new_diagonal = old_diagonal;
             }
         }
-        returndelta[n];
+        return delta[n];
     }
     /**
      * Computes the minimum betwen three integers.

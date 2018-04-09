@@ -35,7 +35,7 @@ public class Population{
 
      */
     public void day() {
-        
+        Collections.sort(populationSet);
+        mostFit = populationSet.get(0);
     }
-
 }   
