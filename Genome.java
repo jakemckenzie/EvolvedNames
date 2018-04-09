@@ -91,7 +91,7 @@ public class Genome {
 
         int geneLength = Math.min(geneticSet.size(),other.geneticSet.size());
         ArrayList<Character> temp = new ArrayList<Character>(geneLength);
-        for (int i = 0 ; i < geneLength; i++) temp.add(urn.nextBoolean() ? other.geneticSet.get(i) : geneticSet.get(i));
+        for (int i = 0; i < geneLength; i++) temp.add(urn.nextBoolean() ? other.geneticSet.get(i) : geneticSet.get(i));
         geneticSet = temp;
 
     }
@@ -141,14 +141,17 @@ public class Genome {
 
 
     }
-
+    /*
     public int min(int a, int b) {
         return b ^ ((a ^ b) & -((a < b) ? 1 : 0));
     }
+    */
     /**
      * Claims to run in O(min(m,n)) instead of O(m*n)
      * I implemented the algorithm you gave us and searched for methods which could improve on this.
      * https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#C
+     * @param a The current character set.
+     * @param b The targert character set.
      */
 
     public int levenshteinDistance(ArrayList<Character> a,ArrayList<Character> b) {
@@ -170,15 +173,19 @@ public class Genome {
         }
         return vector[n];
     }
+    /**
+     * Computes the minimum betwen three integers.
+     */
     public int min3(int a, int b, int c) {
         return (a < b) ? ((a < c) ? a : c) : ((b < c) ? b : c);
     }
-
+    /*
     public int abs_diff(int a, int b) {
         int a_b = a - b;
         int shift = a_b >> 31;
         return (a_b ^ shift) - (shift);
     }
+    */
     /*public Integer[][] foo(int row, int column) {
 
         return IntStream.range(1, row)
@@ -190,6 +197,7 @@ public class Genome {
     }*/
     /**
      * This function will display the Genome’s character string and fitness in an easy to read format.
+     * @param charForString converts current geneticSet to string for printing.
      */
     public String toString(ArrayList<Character> charForString) {
         StringBuilder builder = new StringBuilder(charForString.size());
