@@ -5,6 +5,10 @@ public class Population{
      */
     public Genome mostFit;
     /**
+     * The urn used for most randomness used within this class.
+     */
+    private final Random urn = new Random(System.currentTimeMillis());
+    /**
      * The population set for evolution. Populations (or gene pools) evolve as gene frequencies change; individual organism cannot evolve.
      * "The population is the so-called unit of evolution. Genes, individuals, and species also play a role, but it is the change in populations 
      * that characterizes organic evolution." ~ Ernst Mayr, What evolution Is. pg 25
