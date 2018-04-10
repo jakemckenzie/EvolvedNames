@@ -22,7 +22,7 @@ public class Population{
     /**
      * A constructor that initializes a Population with a number of default genomes
      */
-    public void Population(Integer numGenomes, Double mutationRate) {
+    public Population(Integer numGenomes, Double mutationRate) {
         //populationSet = new ArrayList<Genome>();
         for (int i = 0; i < numGenomes; i++) populationSet.add(new Genome(mutationRate));
         mostFit = populationSet.get(0); 
@@ -39,7 +39,10 @@ public class Population{
 
      */
     public void day() {
+        int populationSize = populationSet.size();
         Collections.sort(populationSet);
-        mostFit = populationSet.get(0);
+        //mostFit = populationSet.get(0);
+        //for (int i = numGenomes >> 1; i < populatioNSize; i++) populationSet.remove(i);
+        populationSet = populationSet.subList(0,populationSize >> 1);
     }
 }   

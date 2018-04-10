@@ -18,9 +18,14 @@ import java.util.*;
 * Evolution is thus a plain fact, not a conjecture or assumption." ~ Ernst Mayr, What Evolution Is pg 305
  */
 public class Genome implements Comparable<Genome> {
-    //@Override
-    public int compareTo(Genome a) {
-        return (int) (fitness() - a.fitness());
+    /**
+     * 
+     * https://stackoverflow.com/questions/20035111/java-6-equivalent-of-integer-compare
+     */
+    
+    @Override
+    public int compareTo(Genome that) {
+        return (this.fitness() < that.fitness()) ? -1 : ((this.fitness() == that.fitness()) ? 0 : 1);
     }
     /**
      * The target string is my instructor's name.
@@ -158,7 +163,7 @@ public class Genome implements Comparable<Genome> {
         //
         return levenshteinDistance(geneticSet,target);    
 
-
+        //1700088761 icaregifts.com
     }
     /*
     public int min(int a, int b) {
