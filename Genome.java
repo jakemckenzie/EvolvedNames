@@ -17,10 +17,10 @@ import java.util.*;
 * existence of genetic programs makes the assumption of a stationary world impossible. 
 * Evolution is thus a plain fact, not a conjecture or assumption." ~ Ernst Mayr, What Evolution Is pg 305
  */
-public abstract class Genome implements Comparable<Genome> {
+public class Genome implements Comparable<Genome> {
     //@Override
-    public int compare(Genome a, Genome b) {
-        return (a.fitness() > b.fitness() ? 1 :(a.fitness() < b.fitness() ? -1 : 0));
+    public int compareTo(Genome a) {
+        return (int) (fitness() - a.fitness());
     }
     /**
      * The target string is my instructor's name.
