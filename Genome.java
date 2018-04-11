@@ -1,4 +1,6 @@
 import java.util.*;
+//cd Documents\Data Structures\Assignment2
+//javac Genome.java Population.java Main.java
 //import java.util.stream.Collector;
 //import java.util.stream.Stream;
 /**
@@ -27,6 +29,7 @@ public class Genome implements Comparable<Genome> {
 
     public Genome(double mutationRate){
         mutRate = mutationRate;
+        geneticSet = new ArrayList<Character>();
         geneticSet.add(set.get(0));
     }
     /**
@@ -37,15 +40,23 @@ public class Genome implements Comparable<Genome> {
     public Genome(Genome gene) {
         mutRate = gene.mutRate;
         geneticSet = new ArrayList<Character>();
+        //geneticSet
+        //geneticSet = new ArrayList<Character>();
+        
         //for (Character c : gene.geneticSet) geneticSet.add(c);
-        //Stream.of(gene.geneticSet).forEach(value -> geneticSet.add(value)); 
-        geneticSet.addAll(gene.geneticSet);
+        //Stream.of(gene.geneticSet).forEach(value -> geneticSet.add(value));
+        for (char c : gene.geneticSet) {
+			geneticSet.add(c);
+		} 
+        //geneticSet.addAll(gene.geneticSet);
         //geneticSet = gene.geneticSet.stream().collect(Collectors.toList());
     }
     
     /**
      * This compares two integers and returns the larger of the two. 
      * https://stackoverflow.com/questions/20035111/java-6-equivalent-of-integer-compare
+     * 
+     * This is how Java implements compare.
      */
     
     //@Override
@@ -74,7 +85,7 @@ public class Genome implements Comparable<Genome> {
      * Typicaly List is chosen for this but for random access and other libraries specific to
      * ArrayLists I chose that. Hopefully that pans out to a better time complexity.
      */
-    private ArrayList<Character> geneticSet = new ArrayList<Character>();;
+    public ArrayList<Character> geneticSet;
     /**
      * The mutation rate for the evolution in this universe. 
      */
@@ -94,9 +105,12 @@ public class Genome implements Comparable<Genome> {
      * selected character
      */
     public void mutate() {
-        if (randomTrial()) geneticSet.add(urn.ints(0,geneticSet.size()).findFirst().getAsInt(),set.get(urn.ints(0,set.size()).findFirst().getAsInt()));       
-        if (geneticSet.size() > 1 && randomTrial()) geneticSet.remove(urn.ints(0,geneticSet.size()).findFirst().getAsInt());
-        for (int i = 0; i < geneticSet.size(); i++) if (randomTrial()) geneticSet.set(i,set.get(urn.ints(0,set.size()).findFirst().getAsInt()));
+        if (randomTrial()) geneticSet.add(shakeUrn(geneticSet.size()),set.get(shakeUrn(set.size())));       
+        if (geneticSet.size() > 1 && randomTrial()) geneticSet.remove(shakeUrn(geneticSet.size()));
+        for (int i = 0; i < geneticSet.size(); i++) if (randomTrial()) geneticSet.set(i,set.get(shakeUrn(set.size())));
+    }
+    public int shakeUrn(int z) {
+        return urn.ints(0,z).findFirst().getAsInt();
     }
     
     /**
@@ -105,7 +119,7 @@ public class Genome implements Comparable<Genome> {
      */
 
     private boolean randomTrial() {
-        return (urn.ints(0,101).findFirst().getAsInt() <= (mutRate * 100));
+        return (urn.nextDouble() <= mutRate);
     }
     /**
      * This function will update the current Genome by crossing it over with other.
@@ -136,7 +150,7 @@ public class Genome implements Comparable<Genome> {
      * Even if it isn't faster it was fun to read about.
      * http://graphics.stanford.edu/~seander/bithacks.html
      */
-    public int fitness() {
+    //public int fitness() {
 
         //int n = geneticSet.size();
         //int m = target.size();
@@ -162,10 +176,34 @@ public class Genome implements Comparable<Genome> {
         }
         return D[n][m] + (abs_diff(n,m) + 1) / 2;*/
         //
-        return levenshteinDistance(geneticSet,target);    
+      //  return levenshteinDistance(geneticSet,target);    
 
         //1700088761 icaregifts.com
-    }
+    //}
+
+    public int fitness() {
+		int n = geneticSet.size();
+		int m = target.size();
+		int[][] D = new int[n + 1][m + 1];
+		for (int i = 0; i <= m; i++) {
+			D[0][i] = i;
+		}
+		for (int j = 0; j <= n; j++) {
+			D[j][0] = j;
+		}
+		for (int j = 1; j <= m; j++) {
+			for (int i = 1; i <= n; i++) {
+				if (geneticSet.get(i - 1) == target.get(j - 1)) {
+					D[i][j] = D[i - 1][j - 1];
+				} else {
+					D[i][j] = Math.min(Math.min(D[i - 1][j] + 1, D[i][j - 1] + 1),
+							           D[i - 1][j - 1] + 1);
+				}
+			}
+		}
+		return D[n][m] + (Math.abs(n - m) + 1) / 2;
+		
+	}
     /*
     public int min(int a, int b) {
         return b ^ ((a ^ b) & -((a < b) ? 1 : 0));
@@ -186,14 +224,13 @@ public class Genome implements Comparable<Genome> {
         int m = b.size();
         //int new_diagonal;
         int old_diagonal;
-
         int delta[] = new int[n + 1]; 
         for (int i = 1; i <= n; i++) delta[i] = i;
         for (int j = 1; j <= m; j++) {
            delta[0] = j;
-            for (int k = 1, new_diagonal = j - 1 ; k <= n; k++) {
-                old_diagonal =delta[k];
-                delta[k] = min3(delta[k] + 1,delta[k - 1] + 1, new_diagonal + (a.get(j - 1) == b.get(k - 1) ? 0 : 1));
+            for (int i = 1, new_diagonal = j - 1 ; i <= n; i++) {
+                old_diagonal =delta[i];
+                delta[i] = min3(delta[i] + 1,delta[i - 1] + 1, new_diagonal + (a.get(i - 1) == b.get(j - 1) ? 0 : 1));
                 new_diagonal = old_diagonal;
             }
         }

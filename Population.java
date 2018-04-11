@@ -4,6 +4,8 @@ public class Population{
      * A data element that is equal to the most­fit Genome in the population.
      */
     public Genome mostFit;
+
+    public int numGenomes;
     /**
      * The urn used for most randomness used within this class.
      */
@@ -18,12 +20,14 @@ public class Population{
      * populations. Within a population, in contrast to a class, every individual is uniquely different from every other individual" 
      *  ~ Ernst Mayr, What evolution Is. pg 95
      */
-    private ArrayList<Genome> populationSet = new ArrayList<Genome>();
+    private ArrayList<Genome> populationSet;
     /**
      * A constructor that initializes a Population with a number of default genomes
      */
     public Population(Integer numGenomes, Double mutationRate) {
         //populationSet = new ArrayList<Genome>();
+        this.numGenomes = numGenomes;
+        populationSet = new ArrayList<Genome>(numGenomes);
         for (int i = 0; i < numGenomes; i++) populationSet.add(new Genome(mutationRate));
         mostFit = populationSet.get(0); 
     }
@@ -42,8 +46,8 @@ public class Population{
         int populationSize = populationSet.size() >> 1;
         Collections.sort(populationSet);
         //mostFit = populationSet.get(0);
-        //for (int i = numGenomes >> 1; i < populatioNSize; i++) populationSet.remove(i);
-        populationSet = (ArrayList<Genome>) populationSet.subList(0, populationSize);
+        for (int i = numGenomes >> 1; i < populationSet.size(); i++) populationSet.remove(i);
+        //populationSet = (ArrayList<Genome>) populationSet.subList(0, populationSize);
 
         for (int i = 0; i < populationSize; i++) {
             int copyIndex = (urn.ints(0,populationSize).findFirst().getAsInt());
@@ -58,8 +62,19 @@ public class Population{
             populationSet.add(newGenome);
         }
         mostFit = null;
-        for (Genome gene : populationSet) mostFit = (null == mosFit) ? gene : (mostFit.compareTo(gene) <= 0 ? mostFit : gene);
+        for (Genome gene : populationSet) mostFit = (null == mostFit) ? gene : (mostFit.compareTo(gene) <= 0 ? mostFit : gene);
     }
 
-    
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Most fit: ");
+        sb.append(mostFit);
+        sb.append('\n');
+        for (Genome g : populationSet) {
+            sb.append(g).append('\n');
+        }
+        sb.append('\n');
+        return sb.toString();
+    }
+
 }   
