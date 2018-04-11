@@ -67,12 +67,13 @@ public class Population{
     
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Most fit: ");
+        //System.out.println("Most fit: " + mostFit);
+        //for (genome g : populationSet) System.out.println(g);
+        //System.out.println();
+        sb.append("Most fit: " + mostFit);
         sb.append(mostFit);
         sb.append('\n');
-        for (Genome g : populationSet) {
-            sb.append(g).append('\n');
-        }
+        for (Genome g : populationSet) sb.append(g).append('\n');
         sb.append('\n');
         return sb.toString();
     }
