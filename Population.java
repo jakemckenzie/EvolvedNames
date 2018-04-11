@@ -39,10 +39,27 @@ public class Population{
 
      */
     public void day() {
-        int populationSize = populationSet.size();
+        int populationSize = populationSet.size() >> 1;
         Collections.sort(populationSet);
         //mostFit = populationSet.get(0);
         //for (int i = numGenomes >> 1; i < populatioNSize; i++) populationSet.remove(i);
-        populationSet = populationSet.subList(0,populationSize >> 1);
+        populationSet = (ArrayList<Genome>) populationSet.subList(0, populationSize);
+
+        for (int i = 0; i < populationSize; i++) {
+            int copyIndex = (urn.ints(0,populationSize).findFirst().getAsInt());
+            Genome oldGenome = populationSet.get(copyIndex);
+            Genome newGenome = new Genome(oldGenome);
+            if (urn.nextBoolean()) {
+                int crossoverIndex = (urn.ints(0,populationSize).findFirst().getAsInt());
+                Genome crossoverGenome = populationSet.get(crossoverIndex);
+                newGenome.crossover(crossoverGenome);
+            }
+            newGenome.mutate();
+            populationSet.add(newGenome);
+        }
+        mostFit = null;
+        for (Genome gene : populationSet) mostFit = (null == mosFit) ? gene : (mostFit.compareTo(gene) <= 0 ? mostFit : gene);
     }
+
+    
 }   

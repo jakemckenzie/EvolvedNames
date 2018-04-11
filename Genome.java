@@ -44,7 +44,7 @@ public class Genome implements Comparable<Genome> {
     }
     
     /**
-     * 
+     * This compares two integers and returns the larger of the two. 
      * https://stackoverflow.com/questions/20035111/java-6-equivalent-of-integer-compare
      */
     
@@ -93,11 +93,10 @@ public class Genome implements Comparable<Genome> {
      * with mutationRate chance the character is replaced by a randomly 
      * selected character
      */
-
     public void mutate() {
-        if (randomTrial()) geneticSet.add(urn.nextInt(geneticSet.size()),set.get(urn.nextInt(set.size())));       
-        if (geneticSet.size() > 1 && randomTrial()) geneticSet.remove(urn.nextInt(geneticSet.size()));
-        for (int i = 0; i < geneticSet.size(); i++) if (randomTrial()) geneticSet.set(i,set.get(urn.nextInt(set.size())));
+        if (randomTrial()) geneticSet.add(urn.ints(0,geneticSet.size()).findFirst().getAsInt(),set.get(urn.ints(0,set.size()).findFirst().getAsInt()));       
+        if (geneticSet.size() > 1 && randomTrial()) geneticSet.remove(urn.ints(0,geneticSet.size()).findFirst().getAsInt());
+        for (int i = 0; i < geneticSet.size(); i++) if (randomTrial()) geneticSet.set(i,set.get(urn.ints(0,set.size()).findFirst().getAsInt()));
     }
     
     /**
