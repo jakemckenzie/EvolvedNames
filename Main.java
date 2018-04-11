@@ -1,38 +1,18 @@
 public class Main {
 
-    /**
-     * Instantiate a population and call day() until the target string is part of the population.
-     * <ul>
-     * <li>The target string has fitness zero so the loop should repeat until the most fit genome has fitness zero.</li>
-     * <li>After each execution of day() output the most fit genome.</li>
-     * <li>To measure performance output the number of generations (i.e times day() is called) and the execution time.</li>
-     * </ul>
-     */
-    public static void main(String[] args) {
-        long startTime = System.nanoTime();
-        Population population = new Population(100, .25d);
-        int generation = 1;
-        while (0 != population.mostFit.getFitness()) {
-            population.day();
-            System.out.println(population.mostFit);
-            generation++;
-        }
-        System.out.println("Generations: " + generation);
-        long endTime = System.nanoTime();
-        System.out.println("Running Time: " + (endTime - startTime) + " nanoseconds");
-    }
-    public static void testGenome() {
-        Genome genome = new Genome(.05);
-        for (int i = 0; i < 100; i++) {
-            genome.mutate();
-            System.out.println(genome);
-        }
-    }
-    public static void testPopulation() {
-        Population population = new Population(100, .25d);
-        for (int i = 0; ; i++) {
-            population.day();
-            System.out.println(population);
-        }
-    }
+    public static void main(String[] theArgs) {
+		long startTime = System.currentTimeMillis();
+		Population p = new Population(100, .05);
+		int i = 1;
+		while (p.mostFit.getFitness() != 0) {
+			p.day();
+			System.out.println("Day " + i + ": " + p.mostFit);
+			i++;
+		}
+		long stopTime = System.currentTimeMillis();
+		System.out.println("Generations: " + (i - 1) + "\nRunning Time: " 
+							+ (stopTime - startTime) + " milliseconds");
+//		testGenome();
+//		testPopulation();
+	}
 }

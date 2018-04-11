@@ -9,7 +9,7 @@ public class Population{
     /**
      * The urn used for most randomness used within this class.
      */
-    private final Random urn = new Random(System.currentTimeMillis());
+    private final Random urn = new Random();
     /**
      * The population set for evolution. Populations (or gene pools) evolve as gene frequencies change; individual organism cannot evolve.
      * "The population is the so-called unit of evolution. Genes, individuals, and species also play a role, but it is the change in populations 
@@ -20,7 +20,7 @@ public class Population{
      * populations. Within a population, in contrast to a class, every individual is uniquely different from every other individual" 
      *  ~ Ernst Mayr, What evolution Is. pg 95
      */
-    private ArrayList<Genome> populationSet;
+    public ArrayList<Genome> populationSet;
     /**
      * A constructor that initializes a Population with a number of default genomes
      */
@@ -43,33 +43,31 @@ public class Population{
 
      */
     public void day() {
-        int populationSize = populationSet.size() >> 1;
+        //int populationSize = populationSet.size() >> 1;
         Collections.sort(populationSet);
         //mostFit = populationSet.get(0);
         for (int i = numGenomes >> 1; i < populationSet.size(); i++) populationSet.remove(i);
         //populationSet = (ArrayList<Genome>) populationSet.subList(0, populationSize);
-
-        for (int i = 0; i < numGenomes - populationSize; i++) {
-            int copyIndex = urn.nextInt(populationSize);
+        int maxIndex = populationSet.size();
+        for (int i = 0; i < numGenomes - populationSet.size(); i++) {
+            int copyIndex = urn.nextInt(maxIndex);
             Genome oldGenome = populationSet.get(copyIndex);
             Genome newGenome = new Genome(oldGenome);
             if (urn.nextBoolean()) {
-                int crossoverIndex = (urn.nextInt(populationSize));
+                int crossoverIndex = (urn.nextInt( populationSet.size()));
                 Genome crossoverGenome = populationSet.get(crossoverIndex);
                 newGenome.crossover(crossoverGenome);
             }
             newGenome.mutate();
             populationSet.add(newGenome);
+            Collections.sort(populationSet);
         }
         mostFit = null;
-        for (Genome g : populationSet) mostFit = (null == mostFit) ? g : (mostFit.compareTo(g) <= 0 ? mostFit : g);
+        for (Genome g : populationSet) mostFit = (mostFit == null) ? g : (mostFit.compareTo(g) <= 0 ? mostFit : g);
     }
     
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        //System.out.println("Most fit: " + mostFit);
-        //for (genome g : populationSet) System.out.println(g);
-        //System.out.println();
         sb.append("Most fit: " + mostFit);
         sb.append(mostFit);
         sb.append('\n');

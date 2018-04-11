@@ -26,9 +26,9 @@ public class Genome implements Comparable<Genome> {
      * 
      * This is how Java implements compare.
      */
-    private int fitness;
+    public Integer fitness;
     
-    //@Override
+    @Override
     public int compareTo(Genome that) {
         return (this.getFitness() < that.getFitness()) ? -1 : ((this.getFitness() == that.getFitness()) ? 0 : 1);
     }
@@ -36,13 +36,13 @@ public class Genome implements Comparable<Genome> {
      * The target string is my instructor's name.
      */
     //private static final String target = "CHRISTOPHER PAUL MARRIOTT";
-    private  final ArrayList<Character> target = new ArrayList<Character>(Arrays.asList('C','H','R','I','S','T','O','P','H','E','R',' ',
-                                                                                        'P','A','U','L',' ',
-                                                                                        'M','A','R','R','I','O','T','T'));
+    private  final char[] target = {'C','H','R','I','S','T','O','P','H','E','R',' ',
+                                   'P','A','U','L',' ',
+                                   'M','A','R','R','I','O','T','T'};
     /**
      * The urn used for most randomness used within this class.
      */
-    private final Random urn = new Random(System.currentTimeMillis());
+    private final Random urn = new Random();
     /**
      * The set of characters that is allowed in this universe for evolution.
      */
@@ -68,9 +68,11 @@ public class Genome implements Comparable<Genome> {
       */
 
     public Genome(double mutationRate){
+        while (mutationRate >= 1) mutationRate -=1;
         mutRate = mutationRate;
         geneticSet = new ArrayList<Character>();
         geneticSet.add(set.get(0));
+        fitness();
     }
     /**
      * A copy constructor that initializes a Genome with the same values
@@ -78,14 +80,14 @@ public class Genome implements Comparable<Genome> {
      * @param gene This genome allows the driver to pass the gene from inside the driver.
      */
     public Genome(Genome gene) {
-        mutRate = gene.mutRate;
-        geneticSet = new ArrayList<Character>();
+        this.mutRate = gene.mutRate;
+        this.geneticSet = new ArrayList<Character>();
         //geneticSet
         //geneticSet = new ArrayList<Character>();
         
         //for (Character c : gene.geneticSet) geneticSet.add(c);
         //Stream.of(gene.geneticSet).forEach(value -> geneticSet.add(value));
-        for (char c : gene.geneticSet) geneticSet.add(c);
+        for (char c : gene.geneticSet) this.geneticSet.add(c);
         this.fitness = gene.fitness; 
         //geneticSet.addAll(gene.geneticSet);
         //geneticSet = gene.geneticSet.stream().collect(Collectors.toList());
@@ -137,7 +139,7 @@ public class Genome implements Comparable<Genome> {
         ArrayList<Character> temp = new ArrayList<Character>(geneLength);
         for (int i = 0; i < geneLength; i++) temp.add(urn.nextBoolean() ? other.geneticSet.get(i) : geneticSet.get(i));
         geneticSet = temp;
-        fitness();
+        //fitness();
 
     }
     /**
@@ -187,16 +189,47 @@ public class Genome implements Comparable<Genome> {
         //1700088761 icaregifts.com
     //}
 
-    public void fitness() {
+    /*public void fitness() {
 		int n = geneticSet.size();
 		int m = target.size();
 		int[][] D = new int[n + 1][m + 1];
-        int l = Math.max(n,m);
+		for (int i = 0; i <= m; i++) {
+			D[0][i] = i;
+		}
+		for (int j = 0; j <= n; j++) {
+			D[j][0] = j;
+		}
+		for (int j = 1; j <= m; j++) {
+			for (int i = 1; i <= n; i++) {
+				if (geneticSet.get(i - 1) == target.get(j - 1)) {
+					D[i][j] = D[i - 1][j - 1];
+				} else {
+					D[i][j] = Math.min(Math.min(D[i - 1][j] + 1, D[i][j - 1] + 1),
+							           D[i - 1][j - 1] + 1);
+				}
+			}
+		}
+		fitness = D[n][m] + (Math.abs(n - m) + 1) / 2;
+    }*/
+    
+    public void fitness() {
+        int n = geneticSet.size();
+        int m = target.length;
         int f = Math.abs(m - n);
-		for (int i = 0; i < l; i++) if (i >= m || i >= n || target.get(i) != geneticSet.get(i)) f++;
-
+        int l = Math.max(n,m);
+        f <<=1;
+        for (int i = 0; i < l; i++) {
+			if (i < geneticSet.size() && i < m) {
+				if (geneticSet.get(i) != target[i]) {
+					f++;
+				}
+			}
+			if (geneticSet.size() + i < l) {
+				f++;
+			}
+        }
         fitness = f;
-	}
+    }
     /*
     public int min(int a, int b) {
         return b ^ ((a ^ b) & -((a < b) ? 1 : 0));
@@ -210,7 +243,7 @@ public class Genome implements Comparable<Genome> {
      * @param b The targert character set.
      * @return returns the levenshtein distance.
      */
-
+    /*
     public int levenshteinDistance(ArrayList<Character> a,ArrayList<Character> b) {
         //unsigned int s1len, s2len, x, y, lastdiag, olddiag;
         int n = a.size();
@@ -228,7 +261,7 @@ public class Genome implements Comparable<Genome> {
             }
         }
         return delta[n];
-    }
+    }*/
     /**
      * Computes the minimum betwen three integers.
      */
@@ -256,10 +289,15 @@ public class Genome implements Comparable<Genome> {
      * @param charForString converts current geneticSet to string for printing.
      * @return String used for printing the fitness to cmdline
      */
-    public String toString(ArrayList<Character> charForString) {
-        StringBuilder builder = new StringBuilder(charForString.size());
-        for (Character c : charForString) builder.append(c);
-        return "The fitness for " + builder.toString() + " is :" + getFitness();
-    }
+    public String toString() {
+		String result = "(\"";
+		for (Character c : geneticSet) {
+			result += c;
+		}
+		result += "\", ";
+		result += getFitness();
+		result += ")";
+		return result;
+	}
 
 }
