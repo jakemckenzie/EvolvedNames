@@ -49,12 +49,12 @@ public class Population{
         for (int i = numGenomes >> 1; i < populationSet.size(); i++) populationSet.remove(i);
         //populationSet = (ArrayList<Genome>) populationSet.subList(0, populationSize);
 
-        for (int i = 0; i < populationSize; i++) {
-            int copyIndex = (urn.ints(0,populationSize).findFirst().getAsInt());
+        for (int i = 0; i < numGenomes - populationSize; i++) {
+            int copyIndex = urn.nextInt(populationSize);
             Genome oldGenome = populationSet.get(copyIndex);
             Genome newGenome = new Genome(oldGenome);
             if (urn.nextBoolean()) {
-                int crossoverIndex = (urn.ints(0,populationSize).findFirst().getAsInt());
+                int crossoverIndex = (urn.nextInt(populationSize));
                 Genome crossoverGenome = populationSet.get(crossoverIndex);
                 newGenome.crossover(crossoverGenome);
             }
@@ -62,9 +62,9 @@ public class Population{
             populationSet.add(newGenome);
         }
         mostFit = null;
-        for (Genome gene : populationSet) mostFit = (null == mostFit) ? gene : (mostFit.compareTo(gene) <= 0 ? mostFit : gene);
+        for (Genome g : populationSet) mostFit = (null == mostFit) ? g : (mostFit.compareTo(g) <= 0 ? mostFit : g);
     }
-
+    
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Most fit: ");

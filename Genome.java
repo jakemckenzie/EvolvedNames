@@ -21,47 +21,16 @@ import java.util.*;
  */
 public class Genome implements Comparable<Genome> {
     /**
-      * A constructor that initializes a Genome with value ‘A’ and assigns 
-      * the internal mutation rate. 
-      * @param mutationRate The mutationRate must be between zero and one.
-      * NOTE: CONSTRUCTORS DON'T NEED A RETURN TYPE
-      */
-
-    public Genome(double mutationRate){
-        mutRate = mutationRate;
-        geneticSet = new ArrayList<Character>();
-        geneticSet.add(set.get(0));
-    }
-    /**
-     * A copy constructor that initializes a Genome with the same values
-     * as the input gene.
-     * @param gene This genome allows the driver to pass the gene from inside the driver.
-     */
-    public Genome(Genome gene) {
-        mutRate = gene.mutRate;
-        geneticSet = new ArrayList<Character>();
-        //geneticSet
-        //geneticSet = new ArrayList<Character>();
-        
-        //for (Character c : gene.geneticSet) geneticSet.add(c);
-        //Stream.of(gene.geneticSet).forEach(value -> geneticSet.add(value));
-        for (char c : gene.geneticSet) {
-			geneticSet.add(c);
-		} 
-        //geneticSet.addAll(gene.geneticSet);
-        //geneticSet = gene.geneticSet.stream().collect(Collectors.toList());
-    }
-    
-    /**
      * This compares two integers and returns the larger of the two. 
      * https://stackoverflow.com/questions/20035111/java-6-equivalent-of-integer-compare
      * 
      * This is how Java implements compare.
      */
+    private int fitness;
     
     //@Override
     public int compareTo(Genome that) {
-        return (this.fitness() < that.fitness()) ? -1 : ((this.fitness() == that.fitness()) ? 0 : 1);
+        return (this.getFitness() < that.getFitness()) ? -1 : ((this.getFitness() == that.getFitness()) ? 0 : 1);
     }
     /**
      * The target string is my instructor's name.
@@ -92,6 +61,41 @@ public class Genome implements Comparable<Genome> {
     private double mutRate;
     
     /**
+      * A constructor that initializes a Genome with value ‘A’ and assigns 
+      * the internal mutation rate. 
+      * @param mutationRate The mutationRate must be between zero and one.
+      * NOTE: CONSTRUCTORS DON'T NEED A RETURN TYPE
+      */
+
+    public Genome(double mutationRate){
+        mutRate = mutationRate;
+        geneticSet = new ArrayList<Character>();
+        geneticSet.add(set.get(0));
+    }
+    /**
+     * A copy constructor that initializes a Genome with the same values
+     * as the input gene.
+     * @param gene This genome allows the driver to pass the gene from inside the driver.
+     */
+    public Genome(Genome gene) {
+        mutRate = gene.mutRate;
+        geneticSet = new ArrayList<Character>();
+        //geneticSet
+        //geneticSet = new ArrayList<Character>();
+        
+        //for (Character c : gene.geneticSet) geneticSet.add(c);
+        //Stream.of(gene.geneticSet).forEach(value -> geneticSet.add(value));
+        for (char c : gene.geneticSet) geneticSet.add(c);
+        this.fitness = gene.fitness; 
+        //geneticSet.addAll(gene.geneticSet);
+        //geneticSet = gene.geneticSet.stream().collect(Collectors.toList());
+    }
+
+    public int getFitness() {
+        return fitness;
+    }
+    
+    /**
      *­ This function mutates the string in this Genome using the following rules:
      * 
      * With mutationRate chance add a randomly selected character to a randomly
@@ -108,9 +112,10 @@ public class Genome implements Comparable<Genome> {
         if (randomTrial()) geneticSet.add(shakeUrn(geneticSet.size()),set.get(shakeUrn(set.size())));       
         if (geneticSet.size() > 1 && randomTrial()) geneticSet.remove(shakeUrn(geneticSet.size()));
         for (int i = 0; i < geneticSet.size(); i++) if (randomTrial()) geneticSet.set(i,set.get(shakeUrn(set.size())));
+        fitness();
     }
     public int shakeUrn(int z) {
-        return urn.ints(0,z).findFirst().getAsInt();
+        return urn.nextInt(z);
     }
     
     /**
@@ -132,6 +137,7 @@ public class Genome implements Comparable<Genome> {
         ArrayList<Character> temp = new ArrayList<Character>(geneLength);
         for (int i = 0; i < geneLength; i++) temp.add(urn.nextBoolean() ? other.geneticSet.get(i) : geneticSet.get(i));
         geneticSet = temp;
+        fitness();
 
     }
     /**
@@ -181,28 +187,15 @@ public class Genome implements Comparable<Genome> {
         //1700088761 icaregifts.com
     //}
 
-    public int fitness() {
+    public void fitness() {
 		int n = geneticSet.size();
 		int m = target.size();
 		int[][] D = new int[n + 1][m + 1];
-		for (int i = 0; i <= m; i++) {
-			D[0][i] = i;
-		}
-		for (int j = 0; j <= n; j++) {
-			D[j][0] = j;
-		}
-		for (int j = 1; j <= m; j++) {
-			for (int i = 1; i <= n; i++) {
-				if (geneticSet.get(i - 1) == target.get(j - 1)) {
-					D[i][j] = D[i - 1][j - 1];
-				} else {
-					D[i][j] = Math.min(Math.min(D[i - 1][j] + 1, D[i][j - 1] + 1),
-							           D[i - 1][j - 1] + 1);
-				}
-			}
-		}
-		return D[n][m] + (Math.abs(n - m) + 1) / 2;
-		
+        int l = Math.max(n,m);
+        int f = Math.abs(m - n);
+		for (int i = 0; i < l; i++) if (i >= m || i >= n || target.get(i) != geneticSet.get(i)) f++;
+
+        fitness = f;
 	}
     /*
     public int min(int a, int b) {
@@ -266,7 +259,7 @@ public class Genome implements Comparable<Genome> {
     public String toString(ArrayList<Character> charForString) {
         StringBuilder builder = new StringBuilder(charForString.size());
         for (Character c : charForString) builder.append(c);
-        return "The fitness for " + builder.toString() + " is :" + fitness();
+        return "The fitness for " + builder.toString() + " is :" + getFitness();
     }
 
 }
