@@ -19,11 +19,36 @@ import java.util.*;
  */
 public class Genome implements Comparable<Genome> {
     /**
+      * A constructor that initializes a Genome with value ‘A’ and assigns 
+      * the internal mutation rate. 
+      * @param mutationRate The mutationRate must be between zero and one.
+      * NOTE: CONSTRUCTORS DON'T NEED A RETURN TYPE
+      */
+
+    public Genome(double mutationRate){
+        mutRate = mutationRate;
+        geneticSet.add(set.get(0));
+    }
+    /**
+     * A copy constructor that initializes a Genome with the same values
+     * as the input gene.
+     * @param gene This genome allows the driver to pass the gene from inside the driver.
+     */
+    public Genome(Genome gene) {
+        mutRate = gene.mutRate;
+        geneticSet = new ArrayList<Character>();
+        //for (Character c : gene.geneticSet) geneticSet.add(c);
+        //Stream.of(gene.geneticSet).forEach(value -> geneticSet.add(value)); 
+        geneticSet.addAll(gene.geneticSet);
+        //geneticSet = gene.geneticSet.stream().collect(Collectors.toList());
+    }
+    
+    /**
      * 
      * https://stackoverflow.com/questions/20035111/java-6-equivalent-of-integer-compare
      */
     
-    @Override
+    //@Override
     public int compareTo(Genome that) {
         return (this.fitness() < that.fitness()) ? -1 : ((this.fitness() == that.fitness()) ? 0 : 1);
     }
@@ -54,30 +79,7 @@ public class Genome implements Comparable<Genome> {
      * The mutation rate for the evolution in this universe. 
      */
     private double mutRate;
-    /**
-      * A constructor that initializes a Genome with value ‘A’ and assigns 
-      * the internal mutation rate. 
-      * @param mutationRate The mutationRate must be between zero and one.
-      * NOTE: CONSTRUCTORS DON'T NEED A RETURN TYPE
-      */
-
-    public Genome(double mutationRate){
-        mutRate = mutationRate;
-        geneticSet.add(set.get(0));
-    }
-    /**
-     * A copy constructor that initializes a Genome with the same values
-     * as the input gene.
-     * @param gene This genome allows the driver to pass the gene from inside the driver.
-     */
-    public Genome(Genome gene) {
-        mutRate = gene.mutRate;
-        geneticSet = new ArrayList<Character>();
-        //for (Character c : gene.geneticSet) geneticSet.add(c);
-        //Stream.of(gene.geneticSet).forEach(value -> geneticSet.add(value)); 
-        geneticSet.addAll(gene.geneticSet);
-        //geneticSet = gene.geneticSet.stream().collect(Collectors.toList());
-    }
+    
     /**
      *­ This function mutates the string in this Genome using the following rules:
      * 
