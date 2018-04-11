@@ -222,9 +222,9 @@ public class Genome implements Comparable<Genome> {
 			if (i < geneticSet.size() && i < m) {
 				if (geneticSet.get(i) != target[i]) {
 					f++;
-				}
+                }
 			}
-			if (geneticSet.size() + i < l) {
+			if (n + i < l) {
 				f++;
 			}
         }
@@ -290,13 +290,12 @@ public class Genome implements Comparable<Genome> {
      * @return String used for printing the fitness to cmdline
      */
     public String toString() {
-		String result = "(\"";
+		String result = "\"";
 		for (Character c : geneticSet) {
 			result += c;
 		}
 		result += "\", ";
 		result += getFitness();
-		result += ")";
 		return result;
 	}
 
