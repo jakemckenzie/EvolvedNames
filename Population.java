@@ -20,14 +20,14 @@ public class Population{
      * populations. Within a population, in contrast to a class, every individual is uniquely different from every other individual" 
      *  ~ Ernst Mayr, What evolution Is. pg 95
      */
-    public ArrayList<Genome> populationSet;
+    public LinkedList<Genome> populationSet;
     /**
      * A constructor that initializes a Population with a number of default genomes
      */
     public Population(Integer numGenomes, Double mutationRate) {
         //populationSet = new ArrayList<Genome>();
         this.numGenomes = numGenomes;
-        populationSet = new ArrayList<Genome>(numGenomes);
+        populationSet = new LinkedList<Genome>();
         for (int i = 0; i < numGenomes; i++) populationSet.add(new Genome(mutationRate));
         mostFit = populationSet.get(0); 
     }
@@ -43,13 +43,14 @@ public class Population{
 
      */
     public void day() {
+        Genome clone;
         //int populationSize = populationSet.size() >> 1;
         Collections.sort(populationSet);
         //mostFit = populationSet.get(0);
         for (int i = numGenomes >> 1; i < populationSet.size(); i++) populationSet.remove(i);
         //populationSet = (ArrayList<Genome>) populationSet.subList(0, populationSize);
         int maxIndex = populationSet.size();
-        for (int i = 0; i < numGenomes - populationSet.size(); i++) {
+        /*for (int i = 0; i < numGenomes - populationSet.size(); i++) {
             int copyIndex = urn.nextInt(maxIndex);
             Genome oldGenome = populationSet.get(copyIndex);
             Genome newGenome = new Genome(oldGenome);
@@ -61,7 +62,22 @@ public class Population{
             newGenome.mutate();
             populationSet.add(newGenome);
             //Collections.sort(populationSet);
-        }
+        }*/
+        if (urn.nextBoolean()) {
+			while (populationSet.size() != numGenomes) {
+				clone = new Genome(populationSet.get(urn.nextInt(populationSet.size() - 1)));
+				clone.mutate();
+				populationSet.add(clone);
+			}
+		}
+		else {
+			while (populationSet.size() != numGenomes) {
+				clone = new Genome(populationSet.get(urn.nextInt(populationSet.size() - 1)));
+				clone.crossover(new Genome(populationSet.get(urn.nextInt(populationSet.size() - 1))));
+				clone.mutate();
+				populationSet.add(clone);
+			}
+		}
         mostFit = null;
         for (Genome g : populationSet) mostFit = (mostFit == null) ? g : (mostFit.compareTo(g) <= 0 ? mostFit : g);
     }

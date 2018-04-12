@@ -12,7 +12,5 @@ public class Main {
 		long stopTime = System.currentTimeMillis();
 		System.out.println("Generations: " + (i - 1) + "\nRunning Time: " 
 							+ (stopTime - startTime) + " milliseconds");
-//		testGenome();
-//		testPopulation();
-	}
+    }
 }

@@ -46,15 +46,15 @@ public class Genome implements Comparable<Genome> {
     /**
      * The set of characters that is allowed in this universe for evolution.
      */
-    public static ArrayList<Character> set = new ArrayList<Character>(Arrays.asList('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 
-                                                                                    'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 
-                                                                                    'W', 'X', 'Y', 'Z', ' ', '-', '\''));
+    public static char[] set = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 
+                                'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 
+                                'W', 'X', 'Y', 'Z', ' ', '-', '\''};
     /**
      * This is the main genetic set used for evolution. We will evolve it to obtain the target.
      * Typicaly List is chosen for this but for random access and other libraries specific to
      * ArrayLists I chose that. Hopefully that pans out to a better time complexity.
      */
-    public ArrayList<Character> geneticSet;
+    public LinkedList<Character> geneticSet;
     /**
      * The mutation rate for the evolution in this universe. 
      */
@@ -70,8 +70,8 @@ public class Genome implements Comparable<Genome> {
     public Genome(double mutationRate){
         while (mutationRate >= 1) mutationRate -=1;
         mutRate = mutationRate;
-        geneticSet = new ArrayList<Character>();
-        geneticSet.add(set.get(0));
+        geneticSet = new LinkedList<Character>();
+        geneticSet.add(set[0]);
         fitness();
     }
     /**
@@ -81,7 +81,7 @@ public class Genome implements Comparable<Genome> {
      */
     public Genome(Genome gene) {
         this.mutRate = gene.mutRate;
-        this.geneticSet = new ArrayList<Character>();
+        this.geneticSet = new LinkedList<Character>();
         //geneticSet
         //geneticSet = new ArrayList<Character>();
         
@@ -103,7 +103,7 @@ public class Genome implements Comparable<Genome> {
      * With mutationRate chance add a randomly selected character to a randomly
      * selected position in the string
      * 
-     * With mutationRate chance delete a single character from a randomly selected
+     * With mutationRate chancce delete a single character from a randomly selected
      * position of the string but do this only if the string has length at least 2.
      * 
      * For each character in the string:
@@ -111,12 +111,13 @@ public class Genome implements Comparable<Genome> {
      * selected character
      */
     public void mutate() {
-        int index = 0;
-        if (randomTrial()) geneticSet.add(shakeUrn(geneticSet.size()),set.get(shakeUrn(set.size())));       
+        
+        if (randomTrial()) geneticSet.add(shakeUrn(geneticSet.size()+1),set[shakeUrn(set.length)]);       
         if (geneticSet.size() > 1 && randomTrial()) geneticSet.remove(shakeUrn(geneticSet.size()));
-        for (int i = 0; i < geneticSet.size(); i++) if (randomTrial()) geneticSet.set(i,set.get(shakeUrn(set.size())));
+        for (int i = 0; i < geneticSet.size(); i++) if (randomTrial()) geneticSet.set(i,set[shakeUrn(set.length)]);
         fitness();
     }
+    
     public int shakeUrn(int z) {
         return urn.nextInt(z);
     }
@@ -133,16 +134,17 @@ public class Genome implements Comparable<Genome> {
      * This function will update the current Genome by crossing it over with other.
      * @param other this gene from the controller is crossed with the gene in the genome
      */
-
+    
     public void crossover(Genome other) {
 
         int geneLength = Math.min(geneticSet.size(),other.geneticSet.size());
-        ArrayList<Character> temp = new ArrayList<Character>(geneLength);
+        LinkedList<Character> temp = new LinkedList<Character>();
         for (int i = 0; i < geneLength; i++) temp.add(urn.nextBoolean() ? other.geneticSet.get(i) : geneticSet.get(i));
         geneticSet = temp;
-        //fitness();
+        //sfitness();
 
     }
+
     /**
      * @return Returns the fitness of the Genome calculated using the following algorithm:
      * 
@@ -216,18 +218,12 @@ public class Genome implements Comparable<Genome> {
     public void fitness() {
         int n = geneticSet.size();
         int m = target.length;
-        int f = Math.abs(m - n);
-        int l = Math.max(n,m);
+        int f = abs_diff(m,n);
+        int l = n ^((n ^ m) & -(n < m ? 1: 0));
         f <<=1;
         for (int i = 0; i < l; i++) {
-			if (i < geneticSet.size() && i < m) {
-				if (geneticSet.get(i) != target[i]) {
-					f++;
-                }
-			}
-			if (n + i < l) {
-				f++;
-			}
+			if (i < geneticSet.size() && i < m && geneticSet.get(i) != target[i]) f++;
+			if (n + i < l) f++;
         }
         fitness = f;
     }
@@ -269,13 +265,13 @@ public class Genome implements Comparable<Genome> {
     public int min3(int a, int b, int c) {
         return (a < b) ? ((a < c) ? a : c) : ((b < c) ? b : c);
     }
-    /*
+    
     public int abs_diff(int a, int b) {
         int a_b = a - b;
         int shift = a_b >> 31;
         return (a_b ^ shift) - (shift);
     }
-    */
+    
     /*public Integer[][] foo(int row, int column) {
 
         return IntStream.range(1, row)
