@@ -60,7 +60,7 @@ public class Population{
             }
             newGenome.mutate();
             populationSet.add(newGenome);
-            Collections.sort(populationSet);
+            //Collections.sort(populationSet);
         }
         mostFit = null;
         for (Genome g : populationSet) mostFit = (mostFit == null) ? g : (mostFit.compareTo(g) <= 0 ? mostFit : g);

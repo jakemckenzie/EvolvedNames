@@ -111,6 +111,7 @@ public class Genome implements Comparable<Genome> {
      * selected character
      */
     public void mutate() {
+        int index = 0;
         if (randomTrial()) geneticSet.add(shakeUrn(geneticSet.size()),set.get(shakeUrn(set.size())));       
         if (geneticSet.size() > 1 && randomTrial()) geneticSet.remove(shakeUrn(geneticSet.size()));
         for (int i = 0; i < geneticSet.size(); i++) if (randomTrial()) geneticSet.set(i,set.get(shakeUrn(set.size())));
