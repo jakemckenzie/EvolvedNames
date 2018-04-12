@@ -139,7 +139,9 @@ public class Genome implements Comparable<Genome> {
 
         int geneLength = Math.min(geneticSet.size(),other.geneticSet.size());
         LinkedList<Character> temp = new LinkedList<Character>();
-        for (int i = 0; i < geneLength; i++) temp.add(urn.nextBoolean() ? other.geneticSet.get(i) : geneticSet.get(i));
+        //Colections.sort(geneticSet);
+        //Colections.sort(other.geneticSet);
+        for (int i = 0; i < geneLength; i++) temp.add(urn.nextBoolean() ? geneticSet.get(i) : other.geneticSet.get(i));
         geneticSet = temp;
         //sfitness();
 
@@ -220,7 +222,7 @@ public class Genome implements Comparable<Genome> {
         int m = target.length;
         int f = abs_diff(m,n);
         int l = n ^((n ^ m) & -(n < m ? 1: 0));
-        f <<=1;
+        f <<=2;
         for (int i = 0; i < l; i++) {
 			if (i < geneticSet.size() && i < m && geneticSet.get(i) != target[i]) f++;
 			if (n + i < l) f++;

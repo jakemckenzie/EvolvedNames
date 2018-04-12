@@ -50,7 +50,7 @@ public class Population{
         for (int i = numGenomes >> 1; i < populationSet.size(); i++) populationSet.remove(i);
         //populationSet = (ArrayList<Genome>) populationSet.subList(0, populationSize);
         int maxIndex = populationSet.size();
-        /*for (int i = 0; i < numGenomes - populationSet.size(); i++) {
+        for (int i = 0; i < numGenomes - populationSet.size(); i++) {
             int copyIndex = urn.nextInt(maxIndex);
             Genome oldGenome = populationSet.get(copyIndex);
             Genome newGenome = new Genome(oldGenome);
@@ -61,9 +61,9 @@ public class Population{
             }
             newGenome.mutate();
             populationSet.add(newGenome);
-            //Collections.sort(populationSet);
-        }*/
-        if (urn.nextBoolean()) {
+            Collections.sort(populationSet);
+        }
+        /*if (urn.nextBoolean()) {
 			while (populationSet.size() != numGenomes) {
 				clone = new Genome(populationSet.get(urn.nextInt(populationSet.size() - 1)));
 				clone.mutate();
@@ -77,7 +77,7 @@ public class Population{
 				clone.mutate();
 				populationSet.add(clone);
 			}
-		}
+        }*/
         mostFit = null;
         for (Genome g : populationSet) mostFit = (mostFit == null) ? g : (mostFit.compareTo(g) <= 0 ? mostFit : g);
     }
