@@ -43,27 +43,29 @@ public class Population{
 
      */
     public void day() {
-        Collections.sort(populationSet);
-        mostFit = populationSet.get(0);
-        for (int i = numGenomes >> 1; i < populationSet.size(); i++) populationSet.remove(i);
-        int maxIndex = populationSet.size();
-        int count = 2;
-        for (int i = 0; i < numGenomes - populationSet.size(); i++) {
-            if (randomTrial(0.95d)) {
-                Genome g = new Genome(populationSet.get(urn.nextInt(++count)));
-				g.mutate();
-				populationSet.add(g);
+        if (populationSet.size() > 1) {
+            Collections.sort(populationSet);
+            //mostFit = populationSet.get(0);
+            for (int i = numGenomes >> 1; i < populationSet.size(); i++) populationSet.remove(i);
+            int maxIndex = populationSet.size();
+            int count = 2;
+            for (int i = 0; i < numGenomes - populationSet.size(); i++) {
+                if (randomTrial(0.95d)) {
+                    Genome g = new Genome(populationSet.get(urn.nextInt(++count)));
+				    g.mutate();
+				    populationSet.add(g);
+                }
+                if (randomTrial(0.95d)) {
+                    Genome gene = new Genome(populationSet.get(urn.nextInt(count < 20 ? maxIndex>>2:maxIndex>>3)));   
+                    gene.crossover(populationSet.get(urn.nextInt(++count)));
+                    gene.mutate();
+                    populationSet.add(gene);
+                }
             }
-            if (randomTrial(0.95d)) {
-                Genome gene = new Genome(populationSet.get(urn.nextInt(maxIndex >> 3)));   
-                gene.crossover(populationSet.get(urn.nextInt(++count)));
-                gene.mutate();
-                populationSet.add(gene);
-            }
-            //Collections.sort(populationSet);
+            mostFit = null;
+            for (Genome g : populationSet) mostFit = (mostFit == null) ? g : (mostFit.compareTo(g) <= 0 ? mostFit : g);
         }
-        //mostFit = null;
-        for (Genome g : populationSet) mostFit = (mostFit == null) ? g : (mostFit.compareTo(g) <= 0 ? mostFit : g);
+        
     }
 
     private boolean randomTrial(double z) {
