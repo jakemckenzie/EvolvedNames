@@ -227,11 +227,6 @@ public class Genome implements Comparable<Genome> {
         }
         //fitness = f;
     }
-    /*
-    public int min(int a, int b) {
-        return b ^ ((a ^ b) & -((a < b) ? 1 : 0));
-    }
-    */
     /**
      * I implemented the algorithm you gave us and searched for methods which could improve on this.
      * https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#C
