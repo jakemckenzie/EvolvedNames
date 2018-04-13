@@ -42,7 +42,7 @@ public class Genome implements Comparable<Genome> {
     /**
      * The urn used for most randomness used within this class.
      */
-    private final Random urn = new Random();
+    private static final Random urn = new Random();
     /**
      * The set of characters that is allowed in this universe for evolution.
      */
@@ -54,7 +54,7 @@ public class Genome implements Comparable<Genome> {
      * Typicaly List is chosen for this but for random access and other libraries specific to
      * ArrayLists I chose that. Hopefully that pans out to a better time complexity.
      */
-    public LinkedList<Character> geneticSet;
+    public ArrayList<Character> geneticSet;
     /**
      * The mutation rate for the evolution in this universe. 
      */
@@ -70,7 +70,7 @@ public class Genome implements Comparable<Genome> {
     public Genome(double mutationRate){
         while (mutationRate >= 1) mutationRate -=1;
         mutRate = mutationRate;
-        geneticSet = new LinkedList<Character>();
+        geneticSet = new ArrayList<Character>();
         geneticSet.add(set[0]);
         fitness();
     }
@@ -81,7 +81,7 @@ public class Genome implements Comparable<Genome> {
      */
     public Genome(Genome gene) {
         this.mutRate = gene.mutRate;
-        this.geneticSet = new LinkedList<Character>();
+        this.geneticSet = new ArrayList<Character>();
         //geneticSet
         //geneticSet = new ArrayList<Character>();
         
@@ -137,13 +137,13 @@ public class Genome implements Comparable<Genome> {
     
     public void crossover(Genome other) {
 
-        int geneLength = Math.min(geneticSet.size(),other.geneticSet.size());
-        LinkedList<Character> temp = new LinkedList<Character>();
+        int geneLength = (geneticSet.size() < other.geneticSet.size()) ? geneticSet.size() : other.geneticSet.size();
+        ArrayList<Character> temp = new ArrayList<Character>(geneLength);
         //Colections.sort(geneticSet);
         //Colections.sort(other.geneticSet);
         for (int i = 0; i < geneLength; i++) temp.add(urn.nextBoolean() ? geneticSet.get(i) : other.geneticSet.get(i));
         geneticSet = temp;
-        //sfitness();
+        //fitness();
 
     }
 
@@ -220,9 +220,9 @@ public class Genome implements Comparable<Genome> {
     public void fitness() {
         int n = geneticSet.size();
         int m = target.length;
-        int f = abs_diff(m,n);
+        int f = abs_diff(m,n)<<1;
         int l = n ^((n ^ m) & -(n < m ? 1: 0));
-        f <<=2;
+        //f =2;
         for (int i = 0; i < l; i++) {
 			if (i < geneticSet.size() && i < m && geneticSet.get(i) != target[i]) f++;
 			if (n + i < l) f++;
@@ -273,8 +273,12 @@ public class Genome implements Comparable<Genome> {
         int shift = a_b >> 31;
         return (a_b ^ shift) - (shift);
     }
-    
-    /*public Integer[][] foo(int row, int column) {
+    /**
+     * This is a functional programming way of initializing a 2d array.
+     * I commented it out in fear that it would not compile.
+     */
+    /*
+    public Integer[][] intializeArray(int row, int column) {
 
         return IntStream.range(1, row)
                         .mapToObj(r -> IntStream.range(1, row)
@@ -282,7 +286,8 @@ public class Genome implements Comparable<Genome> {
                         .toArray(Integer[]::new))
                         .toArray(Integer[][]::new);
 
-    }*/
+    }
+    */
     /**
      * This function will display the Genome’s character string and fitness in an easy to read format.
      * @param charForString converts current geneticSet to string for printing.
