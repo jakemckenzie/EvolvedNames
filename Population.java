@@ -44,26 +44,30 @@ public class Population{
      */
     public void day() {
         Collections.sort(populationSet);
+        mostFit = populationSet.get(0);
         for (int i = numGenomes >> 1; i < populationSet.size(); i++) populationSet.remove(i);
         int maxIndex = populationSet.size();
         int count = 2;
         for (int i = 0; i < numGenomes - populationSet.size(); i++) {
-            Genome g;
-            if (urn.nextBoolean()) {
-                g = new Genome(populationSet.get(urn.nextInt(++count)));
+            if (randomTrial(0.95d)) {
+                Genome g = new Genome(populationSet.get(urn.nextInt(++count)));
 				g.mutate();
 				populationSet.add(g);
             }
-            Genome gene = new Genome(populationSet.get(urn.nextInt(maxIndex >> 4)));
-            if (urn.nextBoolean()) {
+            if (randomTrial(0.95d)) {
+                Genome gene = new Genome(populationSet.get(urn.nextInt(maxIndex >> 3)));   
                 gene.crossover(populationSet.get(urn.nextInt(++count)));
+                gene.mutate();
+                populationSet.add(gene);
             }
-            gene.mutate();
-            populationSet.add(gene);
             //Collections.sort(populationSet);
         }
-        mostFit = null;
+        //mostFit = null;
         for (Genome g : populationSet) mostFit = (mostFit == null) ? g : (mostFit.compareTo(g) <= 0 ? mostFit : g);
+    }
+
+    private boolean randomTrial(double z) {
+        return (urn.nextDouble() <= z);
     }
 
 }   

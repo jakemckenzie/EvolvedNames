@@ -216,14 +216,16 @@ public class Genome implements Comparable<Genome> {
     public void fitness() {
         int n = geneticSet.size();
         int m = target.length;
-        int f = abs_diff(m,n)<<1;
+        fitness = abs_diff(m,n)<<1;
         int l = n ^((n ^ m) & -(n < m ? 1: 0));
+        //int l = Math.min(n,m);
+        //f+=l;
         //f =2;
         for (int i = 0; i < l; i++) {
-			if (i < geneticSet.size() && i < m && geneticSet.get(i) != target[i]) f++;
-			if (n + i < l) f++;
+			if (i < geneticSet.size() && i < m && geneticSet.get(i) != target[i]) fitness++;
+			if (n + i < l) fitness++;
         }
-        fitness = f;
+        //fitness = f;
     }
     /*
     public int min(int a, int b) {
