@@ -49,18 +49,21 @@ public class Population{
         for (int i = numGenomes >> 1; i < populationSet.size(); i++) populationSet.remove(i);
         //populationSet = (ArrayList<Genome>) populationSet.subList(0, populationSize);
         int maxIndex = populationSet.size();
+        int count = 0;
         for (int i = 0; i < numGenomes - populationSet.size(); i++) {
             Genome g;
             if (urn.nextBoolean()) {
-                g = new Genome(populationSet.get(urn.nextInt(populationSet.size() - 1)));
+                count++;
+                g = new Genome(populationSet.get(urn.nextInt(count)));
 				g.mutate();
 				populationSet.add(g);
             }
-            int copyIndex = urn.nextInt(maxIndex);
+            int copyIndex = urn.nextInt(urn.nextInt(maxIndex) + 1);
             Genome oldGenome = populationSet.get(copyIndex);
             Genome newGenome = new Genome(oldGenome);
             if (urn.nextBoolean()) {
-                int crossoverIndex = (urn.nextInt( populationSet.size() - 1));
+                count++;
+                int crossoverIndex = (urn.nextInt(count));
                 Genome crossoverGenome = populationSet.get(crossoverIndex);
                 newGenome.crossover(crossoverGenome);
             }

@@ -4,7 +4,7 @@ public class Main {
 		int i;
         long count = 0;
         long runtime = 0;
-		for (int j = 1; j < 101; j++) {
+		for (int j = 1; j < 1001; j++) {
             long startTime = System.currentTimeMillis();
 		    Population p = new Population(100, .05);
             i = 1;
@@ -20,8 +20,8 @@ public class Main {
             runtime += (stopTime -startTime);
         }
 		
-        count /= 100;
-        runtime /= 100;
+        count /= 1000;
+        runtime /= 1000;
         System.out.println("The average generations is " + count);
         System.out.println("The average run time is " + runtime);
     }

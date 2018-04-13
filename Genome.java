@@ -136,15 +136,11 @@ public class Genome implements Comparable<Genome> {
      */
     
     public void crossover(Genome other) {
-
         int geneLength = (geneticSet.size() < other.geneticSet.size()) ? geneticSet.size() : other.geneticSet.size();
         ArrayList<Character> temp = new ArrayList<Character>(geneLength);
-        //Colections.sort(geneticSet);
-        //Colections.sort(other.geneticSet);
         for (int i = 0; i < geneLength; i++) temp.add(urn.nextBoolean() ? geneticSet.get(i) : other.geneticSet.get(i));
         geneticSet = temp;
         //fitness();
-
     }
 
     /**
@@ -235,7 +231,6 @@ public class Genome implements Comparable<Genome> {
     }
     */
     /**
-     * Claims to run in O(min(m,n)) instead of O(m*n)
      * I implemented the algorithm you gave us and searched for methods which could improve on this.
      * https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#C
      * @param a The current character set.
