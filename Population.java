@@ -27,11 +27,9 @@ public class Population {
      * A constructor that initializes a Population with a number of default genomes
      */
     public Population(Integer numGenomes, Double mutationRate) {
-        //populationSet = new ArrayList<Genome>();
         this.numGenomes = numGenomes;
         populationSet = new ArrayList<Genome>(numGenomes);
-        for (int i = 0; i < numGenomes; i++)
-            populationSet.add(new Genome(mutationRate));
+        for (int i = 0; i < numGenomes; i++) populationSet.add(new Genome(mutationRate));
         mostFit = populationSet.get(0);
     }
 
@@ -54,7 +52,7 @@ public class Population {
         int count = 2;
         for (int i = 0; i < numGenomes - populationSet.size(); i++) {
             if (randomTrial(0.95d)) {
-                Genome g = new Genome(populationSet.get(urn.nextInt(++count)));
+                Genome g = new Genome(populationSet.get(urn.nextInt(i < 2 ? 1 : ++count)));
                 g.mutate();
                 populationSet.add(g);
             }
