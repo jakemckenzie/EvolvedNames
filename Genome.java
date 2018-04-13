@@ -285,7 +285,6 @@ public class Genome implements Comparable<Genome> {
     */
     /**
      * This function will display the Genome’s character string and fitness in an easy to read format.
-     * @param charForString converts current geneticSet to string for printing.
      * @return String used for printing the fitness to cmdline
      */
     public String toString() {
