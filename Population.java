@@ -10,7 +10,7 @@ public class Population {
     /**
      * The urn used for most randomness used within this class.
      */
-    private static final Random urn = new Random();
+    private static final Random urn = new Random(System.currentTimeMillis());
     /**
      * The population set for evolution. Populations (or gene pools) evolve as gene frequencies change; individual organism cannot evolve.
      * "The population is the so-called unit of evolution. Genes, individuals, and species also play a role, but it is the change in populations 
@@ -46,27 +46,27 @@ public class Population {
      */
     public void day() {
         Collections.sort(populationSet);
-        for (int i = populationSet.size() >> 1; i < populationSet.size(); i++)
-            populationSet.remove(i);
-        int maxIndex = populationSet.size();
-        int count = 2;
+        for (int i = populationSet.size() >> 1; i < populationSet.size(); i++) populationSet.remove(i);
+        //int maxIndex = numGenomes - populationSet.size();
+        //int count = 1;
         for (int i = 0; i < numGenomes - populationSet.size(); i++) {
             if (randomTrial(0.95d)) {
-                Genome g = new Genome(populationSet.get(urn.nextInt(i < 2 ? 1 : ++count)));
+                Genome g = new Genome(populationSet.get(urn.nextInt(populationSet.size())));
                 g.mutate();
                 populationSet.add(g);
             }
             if (randomTrial(0.95d)) {
-                Genome gene = new Genome(populationSet.get(urn.nextInt(count < 20 ? maxIndex >> 1 : maxIndex >> 3)));
-                gene.crossover(populationSet.get(urn.nextInt(++count)));
+                //Genome gene = new Genome(populationSet.get(urn.nextInt(count < 20 ? maxIndex >> 1 : maxIndex >> 3)));
+                Genome gene = new Genome(populationSet.get(urn.nextInt(populationSet.size())));
+                gene.crossover(populationSet.get(urn.nextInt(populationSet.size())));
                 gene.mutate();
                 populationSet.add(gene);
             }
-        }
-        mostFit = null;
-        for (Genome g : populationSet)
-            mostFit = (mostFit == null) ? g : (mostFit.compareTo(g) <= 0 ? mostFit : g);
 
+        }
+        //mostFit = null;
+        //for (Genome g : populationSet) mostFit = (mostFit == null) ? g : (mostFit.compareTo(g) <= 0 ? mostFit : g);
+        for (Genome g : populationSet) if (g.getFitness() < mostFit.getFitness()) mostFit = g;
     }
 
     private boolean randomTrial(double z) {
