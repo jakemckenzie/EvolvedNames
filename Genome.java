@@ -31,7 +31,7 @@ public class Genome implements Comparable<Genome> {
 
     @Override
     public int compareTo(Genome that) {
-        return (this.getFitness() < that.getFitness()) ? -1 : ((this.getFitness() == that.getFitness()) ? 0 : 1);
+        return (this.fitness() < that.fitness()) ? -1 : ((this.fitness() == that.fitness()) ? 0 : 1);
     }
 
     /**
@@ -54,7 +54,7 @@ public class Genome implements Comparable<Genome> {
      * Typicaly List is chosen for this but for random access and other libraries specific to
      * ArrayLists I chose that. Hopefully that pans out to a better time complexity.
      */
-    public ArrayList<Character> geneticSet;
+    public LinkedList<Character> geneticSet;
     /**
      * The mutation rate for the evolution in this universe. 
      */
@@ -70,9 +70,9 @@ public class Genome implements Comparable<Genome> {
     public Genome(double mutationRate) {
         //while (mutationRate >= 1)mutationRate -= 1;
         mutRate = mutationRate;
-        geneticSet = new ArrayList<Character>();
+        geneticSet = new LinkedList<Character>();
         geneticSet.add(set[0]);
-        fitness();
+        setFitness();
     }
 
     /**
@@ -82,19 +82,20 @@ public class Genome implements Comparable<Genome> {
      */
     public Genome(Genome gene) {
         this.mutRate = gene.mutRate;
-        this.geneticSet = new ArrayList<Character>();
+        this.geneticSet = new LinkedList<Character>();
         //geneticSet
         //geneticSet = new ArrayList<Character>();
 
         //for (Character c : gene.geneticSet) geneticSet.add(c);
         //Stream.of(gene.geneticSet).forEach(value -> geneticSet.add(value));
-        for (char c : gene.geneticSet) this.geneticSet.add(c);
+        for (char c : gene.geneticSet)
+            this.geneticSet.add(c);
         this.fitness = gene.fitness;
         //geneticSet.addAll(gene.geneticSet);
         //geneticSet = gene.geneticSet.stream().collect(Collectors.toList());
     }
 
-    public int getFitness() {
+    public int fitness() {
         return fitness;
     }
 
@@ -112,7 +113,6 @@ public class Genome implements Comparable<Genome> {
      * selected character
      */
     public void mutate() {
-
         if (randomTrial())
             geneticSet.add(shakeUrn(geneticSet.size() + 1), set[shakeUrn(set.length)]);
         if (geneticSet.size() > 1 && randomTrial())
@@ -120,7 +120,7 @@ public class Genome implements Comparable<Genome> {
         for (int i = 0; i < geneticSet.size(); i++)
             if (randomTrial())
                 geneticSet.set(i, set[shakeUrn(set.length)]);
-        fitness();
+        setFitness();
     }
 
     public int shakeUrn(int z) {
@@ -143,7 +143,7 @@ public class Genome implements Comparable<Genome> {
 
     public void crossover(Genome other) {
         int geneLength = (geneticSet.size() < other.geneticSet.size()) ? geneticSet.size() : other.geneticSet.size();
-        ArrayList<Character> temp = new ArrayList<Character>(geneLength);
+        LinkedList<Character> temp = new LinkedList<Character>();
         for (int i = 0; i < geneLength; i++)
             temp.add(urn.nextBoolean() ? geneticSet.get(i) : other.geneticSet.get(i));
         geneticSet = temp;
@@ -161,74 +161,41 @@ public class Genome implements Comparable<Genome> {
      * in the current string is different from the character in the
      * target string(or if one of the two chars does not exist).
      * Otherwise add nothing to f.
-     * 
-     * For the interest of no branching and to save computations I did some bitwise operations.
-     * Even if it isn't faster it was fun to read about.
-     * http://graphics.stanford.edu/~seander/bithacks.html
-     */
-    //public int fitness() {
+     */ 
 
-        //int n = geneticSet.size();
-        //int m = target.size();
-        //int m_n = m - n;
-        //int shift = m_n >> 31;
-        //int mask = m_n >> 4 * 2 - 1;
-        //int L = n ^((n ^ m) & -(n < m ? 1: 0));//max
-        //int f = (m_n + mask) ^ mask;//absolute value
-        //int f = (m_n ^ shift) - (shift);//absolute value
-        //int[][] D = new int[n + 1][m + 1];
-        //int i = 1;
-        //Should initialize the array in O(L) instead of O(n) and O(m) respectively but
-        //I was worried that I wouldn't be able to run on your version of Java so I took it out.
-        //Integer[][] D = foo(n + 1, m + 1);
-        //Integer[][] D = new Integer[n + 1][m + 1];
-        /*for (int a = 0 ; a <= n ; a++) D[a][0] = a;
-        for (int b = 0 ; b <= m ; b++) D[0][b] = b;
-        
-        for (int r = 1 ; r <= n ; r++) {
-            for (int c = 1 ; c <= m ; c++) {
-                D[r][c] = (geneticSet.get(r - 1) == target.get(c - 1)) ? D[r - 1][c - 1]:min(min(D[r - 1][c] + 1,D[r][c - 1] + 1),D[r - 1][c - 1] + 1);
-            }
-        }
-        return D[n][m] + (abs_diff(n,m) + 1) / 2;*/
-        //
-      //  return levenshteinDistance(geneticSet,target);    
-
-        //1700088761 icaregifts.com
+    //inmate number: 1700088761 icaregifts.com
     //}
 
-    public void fitness() {
-		int n = geneticSet.size();
-		int m = target.length;
-		int[][] D = new int[n + 1][m + 1];
-		for (int i = 0; i <= m; i++) {
-			D[0][i] = i;
-		}
-		for (int j = 0; j <= n; j++) {
-			D[j][0] = j;
-		}
-		for (int j = 1; j <= m; j++) {
-			for (int i = 1; i <= n; i++) {
-                D[i][j] = (geneticSet.get(i - 1) == target[j - 1]) ? D[i - 1][j - 1] : min3(D[i - 1][j] + 1, D[i][j - 1] + 1, D[i - 1][j - 1] + 1);
-			}
-		}
-        fitness = D[n][m] + (abs_diff(m,n) + 1) >> 1;
-    }
+    /*public void setFitness() {
+        int n = geneticSet.size();
+        int m = target.length;
+        int[][] D = new int[n + 1][m + 1];
+        for (int i = 0; i <= m; i++)
+            D[0][i] = i;
+        for (int j = 0; j <= n; j++)
+            D[j][0] = j;
 
-    /*public void fitness() {
+        for (int j = 1; j <= m; j++) {
+            for (int i = 1; i <= n; i++) {
+                D[i][j] = (geneticSet.get(i - 1) == target[j - 1]) ? D[i - 1][j - 1] : min3(D[i - 1][j] + 1, D[i][j - 1] + 1, D[i - 1][j - 1] + 1);
+            }
+        }
+        fitness = D[n][m] + (abs_diff(m, n) + 1) >> 1;
+    }*/
+    /**
+     * I used some bit manipulation I learned from 
+     */
+    public void setFitness() {
         int n = geneticSet.size();
         int m = target.length;
         fitness = abs_diff(m,n)<<1;//|m - n| * 2
-        int l = n ^((n ^ m) & -(n < m ? 1: 0)); //min(n,m)
-        //int l = mint(n,m);
-        //f+=l;
-        //f =2;
+        int l = min(n,m); //min(n,m)
         for (int i = 0; i < l; i++) {
     		if (i < geneticSet.size() && i < m && geneticSet.get(i) != target[i]) fitness++;
     		if (n + i < l) fitness++;
         }
-        //fitness = f;
-    }*/
+        
+    }
 
     public int min(int n, int m) {
         return n ^ ((n ^ m) & -(n < m ? 1 : 0));
@@ -264,9 +231,12 @@ public class Genome implements Comparable<Genome> {
      * Computes the minimum betwen three integers.
      */
     public int min3(int m, int n, int o) {
-        return min(o,min(m,n));
+        return min(o, min(m, n));
     }
-
+    /**
+     * Computers the absolute difference
+     * pg 33 Hacker's Delight Warren et al
+     */
     public int abs_diff(int a, int b) {
         int a_b = a - b;
         int shift = a_b >> 31;
@@ -275,7 +245,8 @@ public class Genome implements Comparable<Genome> {
 
     /**
      * This is a functional programming way of initializing a 2d array.
-     * I commented it out in fear that it would not compile.
+     * I commented it out in fear that it would not compile if you were
+     * using Java 7 or lower.
      */
     /*
     public Integer[][] intializeArray(int row, int column) {
@@ -298,7 +269,7 @@ public class Genome implements Comparable<Genome> {
             result += c;
         }
         result += "\", ";
-        result += getFitness();
+        result += fitness();
         return result;
     }
 

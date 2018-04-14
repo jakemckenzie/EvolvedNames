@@ -4,11 +4,11 @@ public class Main {
 		int i;
         long count = 0;
         long runtime = 0;
-		for (int j = 1; j < 11; j++) {
+		for (int j = 1; j < 10001; j++) {
             long startTime = System.currentTimeMillis();
 		    Population p = new Population(100, .05);
             i = 1;
-            while (p.mostFit.getFitness() != 0) {
+            while (p.mostFit.fitness() != 0) {
                 p.day();
                 //System.out.println("Day " + i + ": " + p.mostFit);
                 i++;
@@ -20,8 +20,8 @@ public class Main {
             runtime += (stopTime -startTime);
         }
 		
-        count /= 10;
-        runtime /= 10;
+        count /= 10000;
+        runtime /= 10000;
         System.out.println("The average generations is " + count + " days.");
         System.out.println("The average run time is " + runtime + " miliseconds");
     }
