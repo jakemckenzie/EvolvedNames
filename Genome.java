@@ -68,7 +68,6 @@ public class Genome implements Comparable<Genome> {
       */
 
     public Genome(double mutationRate) {
-        //while (mutationRate >= 1)mutationRate -= 1;
         mutRate = mutationRate;
         geneticSet = new ArrayList<Character>();
         geneticSet.add(set[0]);
@@ -83,16 +82,8 @@ public class Genome implements Comparable<Genome> {
     public Genome(Genome gene) {
         this.mutRate = gene.mutRate;
         this.geneticSet = new ArrayList<Character>();
-        //geneticSet
-        //geneticSet = new ArrayList<Character>();
-
-        //for (Character c : gene.geneticSet) geneticSet.add(c);
-        //Stream.of(gene.geneticSet).forEach(value -> geneticSet.add(value));
-        for (char c : gene.geneticSet)
-            this.geneticSet.add(c);
+        for (char c : gene.geneticSet) this.geneticSet.add(c);
         this.fitness = gene.fitness;
-        //geneticSet.addAll(gene.geneticSet);
-        //geneticSet = gene.geneticSet.stream().collect(Collectors.toList());
     }
 
     public int fitness() {
@@ -245,6 +236,13 @@ public class Genome implements Comparable<Genome> {
         fitness = cost[len0 - 1];
     }*/
 
+    /**
+     * @param n left sided variable
+     * @param m right sided variable
+     * computes the minimum between n and m
+     * Hacker's Delight pg 100 Warren et al
+     */
+
     public int min(int n, int m) {
         return n ^ ((n ^ m) & -(n < m ? 1 : 0));
     }
@@ -288,9 +286,7 @@ public class Genome implements Comparable<Genome> {
      */
     public String toString() {
         String result = "\"";
-        for (Character c : geneticSet) {
-            result += c;
-        }
+        for (Character c : geneticSet) result += c;
         result += "\", ";
         result += fitness();
         return result;

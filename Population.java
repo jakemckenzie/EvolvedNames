@@ -39,7 +39,7 @@ public class Population {
      * 
      * (1) Update mostFit variable to the most­fit Genome in the population.
      * (2) Delete the least­fit half of the population.
-     * (3) create new genomes from the remaining population until the number of genomes is restored by doing either of the following with equal chance:
+     * (3) create new genomes from the remaining population until the number of genomes is restored by doing either of the following with *equal chance*:
      *      (I) pick a remaining genome at random and clone it (with the copy constructor) and mutate the clone.
      *     (II) pick a remaining genome at random and clone it and then crossover the clone with another remaining genome selected at random and then
      *          mutate the result.
@@ -47,26 +47,22 @@ public class Population {
     public void day() {
         Collections.sort(populationSet);
         for (int i = populationSet.size() >> 1; i < populationSet.size(); i++) populationSet.remove(i);
-        //populationSet = populationSet.subList(populationSet.size() >> 1, populationSet.size());
         Genome gene;
-        for (int i = 0; i < numGenomes - populationSet.size(); i++) {  
-            if (randomTrial(0.99d)) {
+        while (numGenomes > populationSet.size()) {  
+            if (randomTrial(0.95d)) {//equal probability
+                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size())));
+                gene.mutate();
+                populationSet.add(gene);
+            }
+            if (randomTrial(0.95d)) {//equal probability
                 gene = new Genome(populationSet.get(urn.nextInt(populationSet.size()-1)));
+                gene.crossover(populationSet.get(urn.nextInt(populationSet.size()-1)));
                 gene.mutate();
-                populationSet.add(0,gene);
+                populationSet.add(gene);
             }
-            if (randomTrial(0.99d)) {
-                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size() - 1)));
-                gene.crossover(populationSet.get(urn.nextInt(populationSet.size() - 1)));
-                gene.mutate();
-                populationSet.add(0,gene);
-            }
-            //Collections.sort(populationSet);
         }
-        //mostFit = null;
         for (Genome g : populationSet) mostFit = (mostFit == null) ? g : (mostFit.compareTo(g) <= 0 ? mostFit : g);
-        //for (Genome g : populationSet) mostFit = g.fitness() < mostFit.fitness() ? mostFit : g.mostFit;
-    }
+        }
 
     private boolean randomTrial(double z) {
         return (urn.nextDouble() <= z);
