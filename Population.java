@@ -21,16 +21,17 @@ public class Population {
      * populations. Within a population, in contrast to a class, every individual is uniquely different from every other individual" 
      *  ~ Ernst Mayr, What evolution Is. pg 95
      */
-    public LinkedList<Genome> populationSet;
+    public ArrayList<Genome> populationSet;
 
     /**
      * A constructor that initializes a Population with a number of default genomes
      */
     public Population(Integer numGenomes, Double mutationRate) {
         this.numGenomes = numGenomes;
-        populationSet = new LinkedList<Genome>();
+        populationSet = new ArrayList<Genome>(numGenomes);
         for (int i = 0; i < numGenomes; i++) populationSet.add(new Genome(mutationRate));
-        mostFit = populationSet.get(0);
+        Collections.sort(populationSet);
+        mostFit = populationSet.get(numGenomes-1);
     }
 
     /**
@@ -46,19 +47,17 @@ public class Population {
     public void day() {
         Collections.sort(populationSet);
         for (int i = populationSet.size() >> 1; i < populationSet.size(); i++) populationSet.remove(i);
-        //int maxIndex = numGenomes - populationSet.size();
-        //int count = 1;
+        //populationSet = populationSet.subList(populationSet.size() >> 1, populationSet.size());
         Genome gene;
-        for (int i = 0; i < numGenomes - populationSet.size(); i++) {
-            
-            if (randomTrial(0.95d)) {
-                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size())));
+        for (int i = 0; i < numGenomes - populationSet.size(); i++) {  
+            if (randomTrial(0.99d)) {
+                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size()-1)));
                 gene.mutate();
                 populationSet.add(0,gene);
             }
-            if (randomTrial(0.95d)) {
-                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size())));
-                gene.crossover(populationSet.get(urn.nextInt(populationSet.size())));
+            if (randomTrial(0.99d)) {
+                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size() - 1)));
+                gene.crossover(populationSet.get(urn.nextInt(populationSet.size() - 1)));
                 gene.mutate();
                 populationSet.add(0,gene);
             }

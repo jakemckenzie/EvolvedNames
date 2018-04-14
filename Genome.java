@@ -54,7 +54,7 @@ public class Genome implements Comparable<Genome> {
      * Typicaly List is chosen for this but for random access and other libraries specific to
      * ArrayLists I chose that. Hopefully that pans out to a better time complexity.
      */
-    public LinkedList<Character> geneticSet;
+    public ArrayList<Character> geneticSet;
     /**
      * The mutation rate for the evolution in this universe. 
      */
@@ -70,7 +70,7 @@ public class Genome implements Comparable<Genome> {
     public Genome(double mutationRate) {
         //while (mutationRate >= 1)mutationRate -= 1;
         mutRate = mutationRate;
-        geneticSet = new LinkedList<Character>();
+        geneticSet = new ArrayList<Character>();
         geneticSet.add(set[0]);
         setFitness();
     }
@@ -82,7 +82,7 @@ public class Genome implements Comparable<Genome> {
      */
     public Genome(Genome gene) {
         this.mutRate = gene.mutRate;
-        this.geneticSet = new LinkedList<Character>();
+        this.geneticSet = new ArrayList<Character>();
         //geneticSet
         //geneticSet = new ArrayList<Character>();
 
@@ -143,7 +143,7 @@ public class Genome implements Comparable<Genome> {
 
     public void crossover(Genome other) {
         int geneLength = (geneticSet.size() < other.geneticSet.size()) ? geneticSet.size() : other.geneticSet.size();
-        LinkedList<Character> temp = new LinkedList<Character>();
+        ArrayList<Character> temp = new ArrayList<Character>(geneLength);
         for (int i = 0; i < geneLength; i++)
             temp.add(urn.nextBoolean() ? geneticSet.get(i) : other.geneticSet.get(i));
         geneticSet = temp;
@@ -153,15 +153,7 @@ public class Genome implements Comparable<Genome> {
     /**
      * @return Returns the fitness of the Genome calculated using the following algorithm:
      * 
-     * Let n be the length of the current string and m the length of the target string.
-     * 
-     * Let l = max(n,m) and f = |m - n|.
-     * 
-     * For each character position 1 <= i <= l add one to f if the char
-     * in the current string is different from the character in the
-     * target string(or if one of the two chars does not exist).
-     * Otherwise add nothing to f.
-     */ 
+     */
 
     //inmate number: 1700088761 icaregifts.com
     //}
@@ -174,7 +166,7 @@ public class Genome implements Comparable<Genome> {
             D[0][i] = i;
         for (int j = 0; j <= n; j++)
             D[j][0] = j;
-
+    
         for (int j = 1; j <= m; j++) {
             for (int i = 1; i <= n; i++) {
                 D[i][j] = (geneticSet.get(i - 1) == target[j - 1]) ? D[i - 1][j - 1] : min3(D[i - 1][j] + 1, D[i][j - 1] + 1, D[i - 1][j - 1] + 1);
@@ -183,7 +175,15 @@ public class Genome implements Comparable<Genome> {
         fitness = D[n][m] + (abs_diff(m, n) + 1) >> 1;
     }*/
     /**
-     * I used some bit manipulation I learned from 
+     * setFitness(): sets the fitness using 
+     * Let n be the length of the current string and m the length of the target string.
+     * 
+     * Let l = max(n,m) and f = |m - n|.
+     * 
+     * For each character position 1 <= i <= l add one to f if the char
+     * in the current string is different from the character in the
+     * target string(or if one of the two chars does not exist).
+     * Otherwise add nothing to f.
      */
     public void setFitness() {
         int n = geneticSet.size();
@@ -193,12 +193,7 @@ public class Genome implements Comparable<Genome> {
         for (int i = 0; i < l; i++) {
     		if (i < geneticSet.size() && i < m && geneticSet.get(i) != target[i]) fitness++;
     		if (n + i < l) fitness++;
-        }
-        
-    }
-
-    public int min(int n, int m) {
-        return n ^ ((n ^ m) & -(n < m ? 1 : 0));
+        }   
     }
 
     /**
@@ -208,31 +203,59 @@ public class Genome implements Comparable<Genome> {
      * @param b The targert character set.
      * @return returns the levenshtein distance.
      */
-    /*
-    public int levenshteinDistance(ArrayList<Character> a,ArrayList<Character> b) {
+/*
+    public void setFitness() {
+        int len0 = geneticSet.size() + 1;
+        int len1 = target.length + 1;
         //unsigned int s1len, s2len, x, y, lastdiag, olddiag;
-        int n = a.size();
-        int m = b.size();
-        //int new_diagonal;
-        int old_diagonal;
-        int delta[] = new int[n + 1]; 
-        for (int i = 1; i <= n; i++) delta[i] = i;
-        for (int j = 1; j <= m; j++) {
-           delta[0] = j;
-            for (int i = 1, new_diagonal = j - 1 ; i <= n; i++) {
-                old_diagonal =delta[i];
-                delta[i] = min3(delta[i] + 1,delta[i - 1] + 1, new_diagonal + (a.get(i - 1) == b.get(j - 1) ? 0 : 1));
-                new_diagonal = old_diagonal;
+        // the array of distances                                                       
+        int[] cost = new int[len0];
+        int[] newcost = new int[len0];
+
+        // initial cost of skipping prefix in String s0                                 
+        for (int i = 0; i < len0; i++)
+            cost[i] = i;
+
+        // dynamically computing the array of distances                                  
+
+        // transformation cost for each letter in s1                                    
+        for (int j = 1; j < len1; j++) {
+            // initial cost of skipping prefix in String s1                             
+            newcost[0] = j;
+
+            // transformation cost for each letter in s0                                
+            for (int i = 1; i < len0; i++) {
+                // matching current letters in both strings                             
+                int match = (geneticSet.get(i - 1) == target[j - 1]) ? 0 : 1;
+
+                // computing cost for each transformation                               
+                int cost_replace = cost[i - 1] + match;
+                int cost_insert = cost[i] + 1;
+                int cost_delete = newcost[i - 1] + 1;
+
+                // keep minimum cost                                                    
+                newcost[i] = min3(cost_insert, cost_delete, cost_replace);
             }
+
+            // swap cost/newcost arrays                                                 
+            int[] swap = cost;
+            cost = newcost;
+            newcost = swap;
         }
-        return delta[n];
+        fitness = cost[len0 - 1];
     }*/
+
+    public int min(int n, int m) {
+        return n ^ ((n ^ m) & -(n < m ? 1 : 0));
+    }
+
     /**
      * Computes the minimum betwen three integers.
      */
     public int min3(int m, int n, int o) {
         return min(o, min(m, n));
     }
+
     /**
      * Computers the absolute difference
      * pg 33 Hacker's Delight Warren et al
