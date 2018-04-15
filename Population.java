@@ -31,7 +31,7 @@ public class Population {
         populationSet = new ArrayList<Genome>(numGenomes);
         for (int i = 0; i < numGenomes; i++) populationSet.add(new Genome(mutationRate));
         Collections.sort(populationSet);
-        mostFit = populationSet.get(numGenomes-1);
+        mostFit = populationSet.get(0);
     }
 
     /**
@@ -50,17 +50,18 @@ public class Population {
         Genome gene;
         while (numGenomes > populationSet.size()) {  
             if (randomTrial(0.95d)) {//equal probability
-                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size())));
+                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size()>>1)));
                 gene.mutate();
                 populationSet.add(gene);
             }
             if (randomTrial(0.95d)) {//equal probability
-                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size()-1)));
-                gene.crossover(populationSet.get(urn.nextInt(populationSet.size()-1)));
+                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size()>>1)));
+                gene.crossover(populationSet.get(urn.nextInt(populationSet.size()>>1)));
                 gene.mutate();
                 populationSet.add(gene);
             }
         }
+        mostFit = null;
         for (Genome g : populationSet) mostFit = (mostFit == null) ? g : (mostFit.compareTo(g) <= 0 ? mostFit : g);
         }
 

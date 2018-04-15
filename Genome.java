@@ -105,7 +105,7 @@ public class Genome implements Comparable<Genome> {
      */
     public void mutate() {
         if (randomTrial())
-            geneticSet.add(shakeUrn(geneticSet.size() + 1), set[shakeUrn(set.length)]);
+            geneticSet.add(shakeUrn(geneticSet.size()), set[shakeUrn(set.length)]);
         if (geneticSet.size() > 1 && randomTrial())
             geneticSet.remove(shakeUrn(geneticSet.size()));
         for (int i = 0; i < geneticSet.size(); i++)
@@ -251,7 +251,7 @@ public class Genome implements Comparable<Genome> {
      * Computes the minimum betwen three integers.
      */
     public int min3(int m, int n, int o) {
-        return min(o, min(m, n));
+        return min(min(m, n), o);
     }
 
     /**
