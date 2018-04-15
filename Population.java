@@ -11,6 +11,7 @@ public class Population {
      * The urn used for most randomness used within this class.
      */
     private static final Random urn = new Random(System.currentTimeMillis());
+    //private static final Random urn = new Random();
     /**
      * The population set for evolution. Populations (or gene pools) evolve as gene frequencies change; individual organism cannot evolve.
      * "The population is the so-called unit of evolution. Genes, individuals, and species also play a role, but it is the change in populations 
@@ -22,6 +23,9 @@ public class Population {
      *  ~ Ernst Mayr, What evolution Is. pg 95
      */
     public ArrayList<Genome> populationSet;
+    //public LinkedList<Genome> populationSet;
+    //public Vector<Genome> populationSet;
+    //public TreeSet<Genome> populationSet;
 
     /**
      * A constructor that initializes a Population with a number of default genomes
@@ -29,6 +33,9 @@ public class Population {
     public Population(Integer numGenomes, Double mutationRate) {
         this.numGenomes = numGenomes;
         populationSet = new ArrayList<Genome>(numGenomes);
+        //populationSet = new LinkedList<Genome>();
+        //populationSet = new Vector<Genome>(numGenomes);
+        //populationSet = new TreeSet<Genome>();
         for (int i = 0; i < numGenomes; i++) populationSet.add(new Genome(mutationRate));
         Collections.sort(populationSet);
         mostFit = populationSet.get(0);
@@ -50,13 +57,13 @@ public class Population {
         Genome gene;
         while (numGenomes > populationSet.size()) {  
             if (randomTrial(0.95d)) {//equal probability
-                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size()>>1)));
+                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size()-1)));
                 gene.mutate();
                 populationSet.add(gene);
             }
             if (randomTrial(0.95d)) {//equal probability
-                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size()>>1)));
-                gene.crossover(populationSet.get(urn.nextInt(populationSet.size()>>1)));
+                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size()-1)));
+                gene.crossover(populationSet.get(urn.nextInt(populationSet.size()-1)));
                 gene.mutate();
                 populationSet.add(gene);
             }

@@ -44,6 +44,7 @@ public class Genome implements Comparable<Genome> {
      * The urn used for most randomness used within this class.
      */
     private static final Random urn = new Random(System.currentTimeMillis());
+    //private static final Random urn = new Random();
     /**
      * The set of characters that is allowed in this universe for evolution.
      */
@@ -55,6 +56,9 @@ public class Genome implements Comparable<Genome> {
      * ArrayLists I chose that. Hopefully that pans out to a better time complexity.
      */
     public ArrayList<Character> geneticSet;
+    //public LinkedList<Character> geneticSet;
+    //public Vector<Character> geneticSet;
+    //public TreeSet<Character> geneticSet;
     /**
      * The mutation rate for the evolution in this universe. 
      */
@@ -70,6 +74,9 @@ public class Genome implements Comparable<Genome> {
     public Genome(double mutationRate) {
         mutRate = mutationRate;
         geneticSet = new ArrayList<Character>();
+        //geneticSet = new LinkedList<Character>();
+        //geneticSet = new Vector<Character>();
+        //geneticSet = new TreeSet<Character>();
         geneticSet.add(set[0]);
         setFitness();
     }
@@ -82,6 +89,9 @@ public class Genome implements Comparable<Genome> {
     public Genome(Genome gene) {
         this.mutRate = gene.mutRate;
         this.geneticSet = new ArrayList<Character>();
+        //this.geneticSet = new LinkedList<Character>();
+        //this.geneticSet = new Vector<Character>();
+        //this.geneticSet = new TreeSet<Character>();
         for (char c : gene.geneticSet) this.geneticSet.add(c);
         this.fitness = gene.fitness;
     }
@@ -135,6 +145,9 @@ public class Genome implements Comparable<Genome> {
     public void crossover(Genome other) {
         int geneLength = (geneticSet.size() < other.geneticSet.size()) ? geneticSet.size() : other.geneticSet.size();
         ArrayList<Character> temp = new ArrayList<Character>(geneLength);
+        //LinkedList<Character> temp = new LinkedList<Character>();
+        //Vector<Character> temp = new Vector<Character>(geneLength);
+        //Vector<Character> temp = new TreeSet<Character>();
         for (int i = 0; i < geneLength; i++)
             temp.add(urn.nextBoolean() ? geneticSet.get(i) : other.geneticSet.get(i));
         geneticSet = temp;
@@ -195,45 +208,22 @@ public class Genome implements Comparable<Genome> {
      * @return returns the levenshtein distance.
      */
 /*
-    public void setFitness() {
-        int len0 = geneticSet.size() + 1;
-        int len1 = target.length + 1;
-        //unsigned int s1len, s2len, x, y, lastdiag, olddiag;
-        // the array of distances                                                       
-        int[] cost = new int[len0];
-        int[] newcost = new int[len0];
-
-        // initial cost of skipping prefix in String s0                                 
-        for (int i = 0; i < len0; i++)
-            cost[i] = i;
-
-        // dynamically computing the array of distances                                  
-
-        // transformation cost for each letter in s1                                    
-        for (int j = 1; j < len1; j++) {
-            // initial cost of skipping prefix in String s1                             
-            newcost[0] = j;
-
-            // transformation cost for each letter in s0                                
-            for (int i = 1; i < len0; i++) {
-                // matching current letters in both strings                             
-                int match = (geneticSet.get(i - 1) == target[j - 1]) ? 0 : 1;
-
-                // computing cost for each transformation                               
-                int cost_replace = cost[i - 1] + match;
-                int cost_insert = cost[i] + 1;
-                int cost_delete = newcost[i - 1] + 1;
-
-                // keep minimum cost                                                    
-                newcost[i] = min3(cost_insert, cost_delete, cost_replace);
+    /*public void setFitness() {
+        int x, y, lastdiag, olddiag;
+        int n = geneticSet.size();
+        int m = target.length;
+        int[] vector = new int[n + 1];
+        for (y = 1; y <= n; y++)
+            vector[y] = y;
+        for (x = 1; x <= m; x++) {
+            vector[0] = x;
+            for (y = 1, lastdiag = x-1; y <= n; y++) {
+                olddiag = vector[y];
+                vector[y] = min3(vector[y] + 1, vector[y-1] + 1, lastdiag + (geneticSet.get(y-1) == target[x - 1] ? 0 : 1));
+                lastdiag = olddiag;
             }
-
-            // swap cost/newcost arrays                                                 
-            int[] swap = cost;
-            cost = newcost;
-            newcost = swap;
         }
-        fitness = cost[len0 - 1];
+        fitness = (vector[n]) + (abs_diff(m, n) + 1) >> 1;
     }*/
 
     /**
