@@ -36,7 +36,8 @@ public class Population {
         //populationSet = new LinkedList<Genome>();
         //populationSet = new Vector<Genome>(numGenomes);
         //populationSet = new TreeSet<Genome>();
-        for (int i = 0; i < numGenomes; i++) populationSet.add(new Genome(mutationRate));
+        for (int i = 0; i < numGenomes; i++)
+            populationSet.add(new Genome(mutationRate));
         Collections.sort(populationSet);
         mostFit = populationSet.get(0);
     }
@@ -53,24 +54,26 @@ public class Population {
      */
     public void day() {
         Collections.sort(populationSet);
-        for (int i = populationSet.size() >> 1; i < populationSet.size(); i++) populationSet.remove(i);
+        for (int i = populationSet.size() >> 1; i < populationSet.size(); i++)
+            populationSet.remove(i);
         Genome gene;
-        while (numGenomes > populationSet.size()) {  
+        while (numGenomes > populationSet.size()) {
             if (randomTrial(0.95d)) {//equal probability
-                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size()-1)));
+                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size() - 1)));
                 gene.mutate();
                 populationSet.add(gene);
             }
             if (randomTrial(0.95d)) {//equal probability
-                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size()-1)));
-                gene.crossover(populationSet.get(urn.nextInt(populationSet.size()-1)));
+                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size() - 1)));
+                gene.crossover(populationSet.get(urn.nextInt(populationSet.size() - 1)));
                 gene.mutate();
                 populationSet.add(gene);
             }
         }
         mostFit = null;
-        for (Genome g : populationSet) mostFit = (mostFit == null) ? g : (mostFit.compareTo(g) <= 0 ? mostFit : g);
-        }
+        for (Genome g : populationSet)
+            mostFit = (mostFit == null) ? g : (mostFit.compareTo(g) <= 0 ? mostFit : g);
+    }
 
     private boolean randomTrial(double z) {
         return (urn.nextDouble() <= z);

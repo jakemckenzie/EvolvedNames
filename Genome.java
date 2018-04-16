@@ -92,7 +92,8 @@ public class Genome implements Comparable<Genome> {
         //this.geneticSet = new LinkedList<Character>();
         //this.geneticSet = new Vector<Character>();
         //this.geneticSet = new TreeSet<Character>();
-        for (char c : gene.geneticSet) this.geneticSet.add(c);
+        for (char c : gene.geneticSet)
+            this.geneticSet.add(c);
         this.fitness = gene.fitness;
     }
 
@@ -162,22 +163,7 @@ public class Genome implements Comparable<Genome> {
     //inmate number: 1700088761 icaregifts.com
     //}
 
-    /*public void setFitness() {
-        int n = geneticSet.size();
-        int m = target.length;
-        int[][] D = new int[n + 1][m + 1];
-        for (int i = 0; i <= m; i++)
-            D[0][i] = i;
-        for (int j = 0; j <= n; j++)
-            D[j][0] = j;
     
-        for (int j = 1; j <= m; j++) {
-            for (int i = 1; i <= n; i++) {
-                D[i][j] = (geneticSet.get(i - 1) == target[j - 1]) ? D[i - 1][j - 1] : min3(D[i - 1][j] + 1, D[i][j - 1] + 1, D[i - 1][j - 1] + 1);
-            }
-        }
-        fitness = D[n][m] + (abs_diff(m, n) + 1) >> 1;
-    }*/
     /**
      * setFitness(): sets the fitness using 
      * Let n be the length of the current string and m the length of the target string.
@@ -199,6 +185,26 @@ public class Genome implements Comparable<Genome> {
     		if (n + i < l) fitness++;
         }   
     }
+    /*
+    public void setFitness() {
+        int n = geneticSet.size();
+        int m = target.length;
+        int[][] D = new int[n + 1][m + 1];
+        for (int i = 0; i <= m; i++)
+            D[0][i] = i;
+        for (int j = 0; j <= n; j++)
+            D[j][0] = j;
+
+        for (int j = 1; j <= m; j++) {
+            for (int i = 1; i <= n; i++) {
+                D[i][j] = (geneticSet.get(i - 1) == target[j - 1]) ? D[i - 1][j - 1]
+                        : min3(D[i - 1][j] + 1, D[i][j - 1] + 1, D[i - 1][j - 1] + 1);
+            }
+        }
+        fitness = D[n][m] + (abs_diff(m, n) + 1) >> 1;
+        //fitness = D[n][m];
+    }
+    */
 
     /**
      * I implemented the algorithm you gave us and searched for methods which could improve on this.
@@ -207,7 +213,7 @@ public class Genome implements Comparable<Genome> {
      * @param b The targert character set.
      * @return returns the levenshtein distance.
      */
-/*
+    /*
     /*public void setFitness() {
         int x, y, lastdiag, olddiag;
         int n = geneticSet.size();
@@ -276,7 +282,8 @@ public class Genome implements Comparable<Genome> {
      */
     public String toString() {
         String result = "\"";
-        for (Character c : geneticSet) result += c;
+        for (Character c : geneticSet)
+            result += c;
         result += "\", ";
         result += fitness();
         return result;
