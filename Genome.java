@@ -43,8 +43,8 @@ public class Genome implements Comparable<Genome> {
     /**
      * The urn used for most randomness used within this class.
      */
-    private static final Random urn = new Random(System.currentTimeMillis());
-    //private static final Random urn = new Random();
+    //private static final Random urn = new Random(System.currentTimeMillis());
+    private static final Random urn = new Random();
     /**
      * The set of characters that is allowed in this universe for evolution.
      */
@@ -97,7 +97,7 @@ public class Genome implements Comparable<Genome> {
         this.fitness = gene.fitness;
     }
 
-    public int fitness() {
+    public Integer fitness() {
         return fitness;
     }
 
@@ -144,14 +144,19 @@ public class Genome implements Comparable<Genome> {
      */
 
     public void crossover(Genome other) {
-        int geneLength = (geneticSet.size() < other.geneticSet.size()) ? geneticSet.size() : other.geneticSet.size();
-        ArrayList<Character> temp = new ArrayList<Character>(geneLength);
+        int geneLength = (geneticSet.size() > other.geneticSet.size()) ? geneticSet.size() : other.geneticSet.size();
+        ArrayList<Character> temp = new ArrayList<Character>();
         //LinkedList<Character> temp = new LinkedList<Character>();
         //Vector<Character> temp = new Vector<Character>(geneLength);
-        //Vector<Character> temp = new TreeSet<Character>();
-        for (int i = 0; i < geneLength; i++)
-            temp.add(urn.nextBoolean() ? geneticSet.get(i) : other.geneticSet.get(i));
-        geneticSet = temp;
+        //TreeSet<Character> temp = new TreeSet<Character>();
+        for (int i = 0; i < geneLength; i++) {
+            if (urn.nextBoolean()) {
+                if (geneticSet.size() > i) temp.add(geneticSet.get(i)); 
+            } else {
+                if (other.geneticSet.size() > i) temp.add(other.geneticSet.get(i));
+            }
+        }
+            geneticSet = temp;
         //fitness();
     }
 

@@ -10,8 +10,8 @@ public class Population {
     /**
      * The urn used for most randomness used within this class.
      */
-    private static final Random urn = new Random(System.currentTimeMillis());
-    //private static final Random urn = new Random();
+    //private static final Random urn = new Random(System.currentTimeMillis());
+    private static final Random urn = new Random();
     /**
      * The population set for evolution. Populations (or gene pools) evolve as gene frequencies change; individual organism cannot evolve.
      * "The population is the so-called unit of evolution. Genes, individuals, and species also play a role, but it is the change in populations 
@@ -58,14 +58,13 @@ public class Population {
             populationSet.remove(i);
         Genome gene;
         while (numGenomes > populationSet.size()) {
-            if (randomTrial(0.95d)) {//equal probability
-                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size() - 1)));
+            if (urn.nextBoolean()) {//equal probability
+                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size()>>1)));
                 gene.mutate();
                 populationSet.add(gene);
-            }
-            if (randomTrial(0.95d)) {//equal probability
-                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size() - 1)));
-                gene.crossover(populationSet.get(urn.nextInt(populationSet.size() - 1)));
+            }else {//equal probability
+                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size()>>1)));
+                gene.crossover(populationSet.get(urn.nextInt(populationSet.size()>>1)));
                 gene.mutate();
                 populationSet.add(gene);
             }
@@ -73,10 +72,6 @@ public class Population {
         mostFit = null;
         for (Genome g : populationSet)
             mostFit = (mostFit == null) ? g : (mostFit.compareTo(g) <= 0 ? mostFit : g);
-    }
-
-    private boolean randomTrial(double z) {
-        return (urn.nextDouble() <= z);
     }
 
 }
