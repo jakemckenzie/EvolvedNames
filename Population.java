@@ -59,12 +59,13 @@ public class Population {
         Genome gene;
         while (numGenomes > populationSet.size()) {
             if (urn.nextBoolean()) {//equal probability
-                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size()>>1)));
+                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size())));
                 gene.mutate();
                 populationSet.add(gene);
-            }else {//equal probability
-                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size()>>1)));
-                gene.crossover(populationSet.get(urn.nextInt(populationSet.size()>>1)));
+            }
+            if (urn.nextBoolean()) {//equal probability
+                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size())));
+                gene.crossover(populationSet.get(urn.nextInt(populationSet.size())));
                 gene.mutate();
                 populationSet.add(gene);
             }

@@ -190,6 +190,11 @@ public class Genome implements Comparable<Genome> {
     		if (n + i < l) fitness++;
         }   
     }
+    /**
+     * This is the extra credit portion. I don't know what the best way to submit this code for grading. If you comment out the function above and run
+     * this line of code instead it should just go.
+     */
+
     /*
     public void setFitness() {
         int n = geneticSet.size();
