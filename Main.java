@@ -11,7 +11,7 @@ public class Main {
         i = 1;
         while (p.mostFit.fitness() != 0) {
             p.day();
-            System.out.println("Day " + i + ": " + p.mostFit);
+            System.out.println("Day " + i + " | " + p.mostFit);
             i++;
         }
         long stopTime = System.currentTimeMillis();

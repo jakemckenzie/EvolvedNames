@@ -294,7 +294,7 @@ public class Genome implements Comparable<Genome> {
         String result = "\"";
         for (Character c : geneticSet)
             result += c;
-        result += "\", ";
+        result += "\" | ";
         result += fitness();
         return result;
     }
