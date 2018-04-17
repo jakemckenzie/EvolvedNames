@@ -22,8 +22,8 @@ public class Population {
      * populations. Within a population, in contrast to a class, every individual is uniquely different from every other individual" 
      *  ~ Ernst Mayr, What evolution Is. pg 95
      */
-    public ArrayList<Genome> populationSet;
-    //public LinkedList<Genome> populationSet;
+    //public ArrayList<Genome> populationSet;
+    public LinkedList<Genome> populationSet;
     //public Vector<Genome> populationSet;
     //public TreeSet<Genome> populationSet;
 
@@ -32,12 +32,11 @@ public class Population {
      */
     public Population(Integer numGenomes, Double mutationRate) {
         this.numGenomes = numGenomes;
-        populationSet = new ArrayList<Genome>(numGenomes);
-        //populationSet = new LinkedList<Genome>();
+        //populationSet = new ArrayList<Genome>(numGenomes);
+        populationSet = new LinkedList<Genome>();
         //populationSet = new Vector<Genome>(numGenomes);
         //populationSet = new TreeSet<Genome>();
-        for (int i = 0; i < numGenomes; i++)
-            populationSet.add(new Genome(mutationRate));
+        for (int i = 0; i < numGenomes; i++) populationSet.add(new Genome(mutationRate));
         Collections.sort(populationSet);
         mostFit = populationSet.get(0);
     }
@@ -54,25 +53,25 @@ public class Population {
      */
     public void day() {
         Collections.sort(populationSet);
-        for (int i = populationSet.size() >> 1; i < populationSet.size(); i++)
-            populationSet.remove(i);
+        for (int i = populationSet.size() >> 1; i < populationSet.size(); i++) populationSet.remove(i);
         Genome gene;
         while (numGenomes > populationSet.size()) {
-            if (urn.nextBoolean()) {//equal probability
+            switch(urn.nextInt(2)) {
+                case 0:
                 gene = new Genome(populationSet.get(urn.nextInt(populationSet.size())));
                 gene.mutate();
                 populationSet.add(gene);
-            }
-            if (urn.nextBoolean()) {//equal probability
+                break;
+                case 1:
                 gene = new Genome(populationSet.get(urn.nextInt(populationSet.size())));
                 gene.crossover(populationSet.get(urn.nextInt(populationSet.size())));
                 gene.mutate();
                 populationSet.add(gene);
+                break;
             }
         }
         mostFit = null;
-        for (Genome g : populationSet)
-            mostFit = (mostFit == null) ? g : (mostFit.compareTo(g) <= 0 ? mostFit : g);
+        for (Genome g : populationSet) mostFit = (mostFit == null) ? g : (mostFit.compareTo(g) <= 0 ? mostFit : g);
     }
 
 }

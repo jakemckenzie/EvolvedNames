@@ -38,8 +38,9 @@ public class Genome implements Comparable<Genome> {
      * The target string is my instructor's name.
      */
     //private static final String target = "CHRISTOPHER PAUL MARRIOTT";
-    private final char[] target = { 'C', 'H', 'R', 'I', 'S', 'T', 'O', 'P', 'H', 'E', 'R', ' ', 'P', 'A', 'U', 'L', ' ',
-            'M', 'A', 'R', 'R', 'I', 'O', 'T', 'T' };
+    private final char[] target = { 'C', 'H', 'R', 'I', 'S', 'T', 'O', 'P', 'H', 'E', 'R', ' ',
+                                    'P', 'A', 'U', 'L', ' ',
+                                    'M', 'A', 'R', 'R', 'I', 'O', 'T', 'T' };
     /**
      * The urn used for most randomness used within this class.
      */
@@ -48,15 +49,16 @@ public class Genome implements Comparable<Genome> {
     /**
      * The set of characters that is allowed in this universe for evolution.
      */
-    public static char[] set = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',
-            'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' ', '-', '\'' };
+    public static char[] set = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+                                 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 
+                                 ' ', '-', '\'' };
     /**
      * This is the main genetic set used for evolution. We will evolve it to obtain the target.
      * Typicaly List is chosen for this but for random access and other libraries specific to
      * ArrayLists I chose that. Hopefully that pans out to a better time complexity.
      */
-    public ArrayList<Character> geneticSet;
-    //public LinkedList<Character> geneticSet;
+    //public ArrayList<Character> geneticSet;
+    public LinkedList<Character> geneticSet;
     //public Vector<Character> geneticSet;
     //public TreeSet<Character> geneticSet;
     /**
@@ -73,8 +75,8 @@ public class Genome implements Comparable<Genome> {
 
     public Genome(double mutationRate) {
         mutRate = mutationRate;
-        geneticSet = new ArrayList<Character>();
-        //geneticSet = new LinkedList<Character>();
+        //geneticSet = new ArrayList<Character>();
+        geneticSet = new LinkedList<Character>();
         //geneticSet = new Vector<Character>();
         //geneticSet = new TreeSet<Character>();
         geneticSet.add(set[0]);
@@ -88,12 +90,11 @@ public class Genome implements Comparable<Genome> {
      */
     public Genome(Genome gene) {
         this.mutRate = gene.mutRate;
-        this.geneticSet = new ArrayList<Character>();
-        //this.geneticSet = new LinkedList<Character>();
+        //this.geneticSet = new ArrayList<Character>();
+        this.geneticSet = new LinkedList<Character>();
         //this.geneticSet = new Vector<Character>();
         //this.geneticSet = new TreeSet<Character>();
-        for (char c : gene.geneticSet)
-            this.geneticSet.add(c);
+        for (char c : gene.geneticSet) this.geneticSet.add(c);
         this.fitness = gene.fitness;
     }
 
@@ -115,13 +116,9 @@ public class Genome implements Comparable<Genome> {
      * selected character
      */
     public void mutate() {
-        if (randomTrial())
-            geneticSet.add(shakeUrn(geneticSet.size()), set[shakeUrn(set.length)]);
-        if (geneticSet.size() > 1 && randomTrial())
-            geneticSet.remove(shakeUrn(geneticSet.size()));
-        for (int i = 0; i < geneticSet.size(); i++)
-            if (randomTrial())
-                geneticSet.set(i, set[shakeUrn(set.length)]);
+        if (randomTrial()) geneticSet.add(shakeUrn(geneticSet.size()), set[shakeUrn(set.length)]);
+        if (geneticSet.size() > 1 && randomTrial()) geneticSet.remove(shakeUrn(geneticSet.size()));
+        for (int i = 0; i < geneticSet.size(); i++) if (randomTrial()) geneticSet.set(i, set[shakeUrn(set.length)]);
         setFitness();
     }
 
@@ -145,30 +142,31 @@ public class Genome implements Comparable<Genome> {
 
     public void crossover(Genome other) {
         int geneLength = (geneticSet.size() > other.geneticSet.size()) ? geneticSet.size() : other.geneticSet.size();
-        ArrayList<Character> temp = new ArrayList<Character>();
-        //LinkedList<Character> temp = new LinkedList<Character>();
+        //ArrayList<Character> temp = new ArrayList<Character>();
+        LinkedList<Character> temp = new LinkedList<Character>();
         //Vector<Character> temp = new Vector<Character>(geneLength);
         //TreeSet<Character> temp = new TreeSet<Character>();
         for (int i = 0; i < geneLength; i++) {
-            if (urn.nextBoolean()) {
-                if (geneticSet.size() > i) temp.add(geneticSet.get(i)); 
-            } else {
+            switch (urn.nextInt(2)) {
+                case 0: 
+                if (geneticSet.size() > i) temp.add(geneticSet.get(i));
+                break;
+                case 1: 
                 if (other.geneticSet.size() > i) temp.add(other.geneticSet.get(i));
-            }
+                break;
+            }   
         }
-            geneticSet = temp;
-        //fitness();
+        geneticSet = temp;
     }
-
+    //inmate number: 1700088761 icaregifts.com
     /**
      * @return Returns the fitness of the Genome calculated using the following algorithm:
      * 
      */
 
-    //inmate number: 1700088761 icaregifts.com
-    //}
-
     
+    
+
     /**
      * setFitness(): sets the fitness using 
      * Let n be the length of the current string and m the length of the target string.
@@ -183,12 +181,12 @@ public class Genome implements Comparable<Genome> {
     public void setFitness() {
         int n = geneticSet.size();
         int m = target.length;
-        fitness = abs_diff(m,n)<<1;//|m - n| * 2
-        int l = min(n,m); //min(n,m)
+        fitness = abs_diff(m, n) << 1;//|m - n| * 2
+        int l = max(n, m); //min(n,m)
         for (int i = 0; i < l; i++) {
-    		if (i < geneticSet.size() && i < m && geneticSet.get(i) != target[i]) fitness++;
-    		if (n + i < l) fitness++;
-        }   
+            if (i < geneticSet.size() && i < m && geneticSet.get(i) != target[i])fitness++;
+            if (n + i < l) fitness++;
+        }
     }
     /**
      * This is the extra credit portion. I don't know what the best way to submit this code for grading. If you comment out the function above and run
@@ -204,7 +202,7 @@ public class Genome implements Comparable<Genome> {
             D[0][i] = i;
         for (int j = 0; j <= n; j++)
             D[j][0] = j;
-
+    
         for (int j = 1; j <= m; j++) {
             for (int i = 1; i <= n; i++) {
                 D[i][j] = (geneticSet.get(i - 1) == target[j - 1]) ? D[i - 1][j - 1]
@@ -245,12 +243,24 @@ public class Genome implements Comparable<Genome> {
     /**
      * @param n left sided variable
      * @param m right sided variable
-     * computes the minimum between n and m
+     * computes the maximum between n and m without branching
      * Hacker's Delight pg 100 Warren et al
+     * 
+     * also: https://graphics.stanford.edu/~seander/bithacks.html#IntegerMinOrMax
      */
-
-    public int min(int n, int m) {
+    public int max(int n, int m) {
         return n ^ ((n ^ m) & -(n < m ? 1 : 0));
+    }
+    /**
+     * @param n left sided variable
+     * @param m right sided variable
+     * computes the minimum between n and m without branching
+     * Hacker's Delight pg 100 Warren et al
+     * 
+     * also: https://graphics.stanford.edu/~seander/bithacks.html#IntegerMinOrMax
+     */
+    public int min(int n, int m){
+        return m ^ ((n ^ m) & -(n < m ? 1 : 0));
     }
 
     /**
