@@ -184,7 +184,7 @@ public class Genome implements Comparable<Genome> {
         fitness = abs_diff(m, n) << 1;//|m - n| * 2
         int l = max(n, m); //min(n,m)
         for (int i = 0; i < l; i++) {
-            if (i < geneticSet.size() && i < m && geneticSet.get(i) != target[i])fitness++;
+            if (i < geneticSet.size() && i < m && geneticSet.get(i) != target[i]) fitness++;
             if (n + i < l) fitness++;
         }
     }
