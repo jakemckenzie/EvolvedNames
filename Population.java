@@ -22,8 +22,8 @@ public class Population {
      * populations. Within a population, in contrast to a class, every individual is uniquely different from every other individual" 
      *  ~ Ernst Mayr, What evolution Is. pg 95
      */
-    //public ArrayList<Genome> populationSet;
-    public LinkedList<Genome> populationSet;
+    public ArrayList<Genome> populationSet;
+    //public LinkedList<Genome> populationSet;
     //public Vector<Genome> populationSet;
     //public TreeSet<Genome> populationSet;
 
@@ -32,8 +32,8 @@ public class Population {
      */
     public Population(Integer numGenomes, Double mutationRate) {
         this.numGenomes = numGenomes;
-        //populationSet = new ArrayList<Genome>(numGenomes);
-        populationSet = new LinkedList<Genome>();
+        populationSet = new ArrayList<Genome>(numGenomes);
+        //populationSet = new LinkedList<Genome>();
         //populationSet = new Vector<Genome>(numGenomes);
         //populationSet = new TreeSet<Genome>();
         for (int i = 0; i < numGenomes; i++) populationSet.add(new Genome(mutationRate));

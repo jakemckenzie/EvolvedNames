@@ -57,8 +57,8 @@ public class Genome implements Comparable<Genome> {
      * Typicaly List is chosen for this but for random access and other libraries specific to
      * ArrayLists I chose that. Hopefully that pans out to a better time complexity.
      */
-    //public ArrayList<Character> geneticSet;
-    public LinkedList<Character> geneticSet;
+    public ArrayList<Character> geneticSet;
+    //public LinkedList<Character> geneticSet;
     //public Vector<Character> geneticSet;
     //public TreeSet<Character> geneticSet;
     /**
@@ -75,8 +75,8 @@ public class Genome implements Comparable<Genome> {
 
     public Genome(double mutationRate) {
         mutRate = mutationRate;
-        //geneticSet = new ArrayList<Character>();
-        geneticSet = new LinkedList<Character>();
+        geneticSet = new ArrayList<Character>();
+        //geneticSet = new LinkedList<Character>();
         //geneticSet = new Vector<Character>();
         //geneticSet = new TreeSet<Character>();
         geneticSet.add(set[0]);
@@ -90,8 +90,8 @@ public class Genome implements Comparable<Genome> {
      */
     public Genome(Genome gene) {
         this.mutRate = gene.mutRate;
-        //this.geneticSet = new ArrayList<Character>();
-        this.geneticSet = new LinkedList<Character>();
+        this.geneticSet = new ArrayList<Character>();
+        //this.geneticSet = new LinkedList<Character>();
         //this.geneticSet = new Vector<Character>();
         //this.geneticSet = new TreeSet<Character>();
         for (char c : gene.geneticSet) this.geneticSet.add(c);
@@ -142,8 +142,8 @@ public class Genome implements Comparable<Genome> {
 
     public void crossover(Genome other) {
         int geneLength = (geneticSet.size() > other.geneticSet.size()) ? geneticSet.size() : other.geneticSet.size();
-        //ArrayList<Character> temp = new ArrayList<Character>();
-        LinkedList<Character> temp = new LinkedList<Character>();
+        ArrayList<Character> temp = new ArrayList<Character>();
+        //LinkedList<Character> temp = new LinkedList<Character>();
         //Vector<Character> temp = new Vector<Character>(geneLength);
         //TreeSet<Character> temp = new TreeSet<Character>();
         for (int i = 0; i < geneLength; i++) {
@@ -189,8 +189,8 @@ public class Genome implements Comparable<Genome> {
         }
     }
     /**
-     * This is the extra credit portion. I don't know what the best way to submit this code for grading. If you comment out the function above and run
-     * this line of code instead it should just go.
+     * This is the extra credit portion. I don't know what the best way to submit this code for grading. 
+     * If you comment out the function above and run this line of code instead it should just go.
      */
 
     /*
@@ -205,8 +205,7 @@ public class Genome implements Comparable<Genome> {
     
         for (int j = 1; j <= m; j++) {
             for (int i = 1; i <= n; i++) {
-                D[i][j] = (geneticSet.get(i - 1) == target[j - 1]) ? D[i - 1][j - 1]
-                        : min3(D[i - 1][j] + 1, D[i][j - 1] + 1, D[i - 1][j - 1] + 1);
+                D[i][j] = (geneticSet.get(i - 1) == target[j - 1]) ? D[i - 1][j - 1] : min3(D[i - 1][j] + 1, D[i][j - 1] + 1, D[i - 1][j - 1] + 1);
             }
         }
         fitness = D[n][m] + (abs_diff(m, n) + 1) >> 1;
@@ -277,7 +276,7 @@ public class Genome implements Comparable<Genome> {
     public int abs_diff(int a, int b) {
         int a_b = a - b;
         int shift = a_b >> 31;
-        return (a_b ^ shift) - (shift);
+        return (a_b ^ shift) - (shift);//this algorithm is patented
     }
 
     /**
