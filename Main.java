@@ -3,7 +3,9 @@
  * The main driver for the program.
  */
 import java.util.*;
+import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 public class Main {
 
@@ -57,33 +59,47 @@ public class Main {
 
     private static void testFinal(int z) {
         System.out.println("Running testFinal():");
-        int[] vector = new int[z];
+        int[] dayVector = new int[z];
+        long[] timeVector = new long[z];
         int i;
         //long count = 0;
         //long runtime = 0;
         for (int j = 1; j < z + 1; j++) {
-            //long startTime = System.currentTimeMillis();
+            long startTime = System.currentTimeMillis();
             Population p = new Population(100, .05);
             i = 1;
 
             while (p.mostFit.fitness() != 0) {
                 p.day();
-                //System.out.println("Day " + i + " | " + p.mostFit);
+                System.out.println("Day " + i + " | " + p.mostFit);
                 i++;
             }
-            vector[j - 1] = i;
-            //long stopTime = System.currentTimeMillis();
-            //System.out.println("Generations: " + (i - 1) + "\nRunning Time: " + (stopTime - startTime) + " milliseconds");
+            long stopTime = System.currentTimeMillis();
+            dayVector[j - 1] = i;
+            timeVector[j - 1] = (stopTime - startTime);
+            System.out.println("Generations: " + (i - 1) + "\nRunning Time: " + (stopTime - startTime) + " milliseconds");
             //count += i;
             //runtime += (stopTime - startTime);
-            System.out.println(j);
+            //System.out.println(j);
         }
-        IntStream intStream = Arrays.stream(vector);//http://www.java2s.com/Tutorials/Java_Streams/Example/IntStream/Convert_int_array_to_IntStream.htm
+        IntStream intStream = Arrays.stream(dayVector);//http://www.java2s.com/Tutorials/Java_Streams/Example/IntStream/Convert_int_array_to_IntStream.htm
         IntSummaryStatistics istats = intStream.collect(IntSummaryStatistics::new, 
                                                         IntSummaryStatistics::accept,
                                                         IntSummaryStatistics::combine);
-        System.out.println("Max:" + istats.getMax() + ", Min:" + istats.getMin());
-        System.out.println("Average:" + istats.getAverage());
+        LongStream longStream = Arrays.stream(timeVector);//http://www.java2s.com/Tutorials/Java_Streams/Example/IntStream/Convert_int_array_to_IntStream.htm
+        LongSummaryStatistics longStats = longStream.collect(LongSummaryStatistics::new, 
+                                                            LongSummaryStatistics::accept,
+                                                            LongSummaryStatistics::combine);
+        double daySd = 0.0;
+        double timeSd = 0.0;
+        for (int n:dayVector) daySd += Math.pow((double)n - istats.getAverage(),2);
+        for (long t:timeVector) timeSd += Math.pow((double)t - longStats.getAverage(),2);
+        daySd = Math.sqrt(daySd/z);
+        timeSd = Math.sqrt(timeSd/z);
+        System.out.println("Max: " + istats.getMax() + ", Min: " + istats.getMin());
+        System.out.println("Average: " + istats.getAverage() + ", Standard Deviation: " + daySd);
+        System.out.println("Max: " + longStats.getMax() + ", Min: " + longStats.getMin());
+        System.out.println("Average: " + longStats.getAverage() + ", Standard Deviation: " + timeSd);
         //https://www.concretepage.com/java/jdk-8/java-8-summary-statistics-example
         //System.out.println("The average generations is " + count + " days.");
         //System.out.println("The average run time is " + runtime + " miliseconds");

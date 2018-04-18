@@ -31,7 +31,7 @@ public class Genome implements Comparable<Genome> {
 
     @Override
     public int compareTo(Genome that) {
-        return (this.fitness() < that.fitness()) ? -1 : ((this.fitness() == that.fitness()) ? 0 : 1);
+        return (this.fitness() - that.fitness());
     }
 
     /**
@@ -44,8 +44,8 @@ public class Genome implements Comparable<Genome> {
     /**
      * The urn used for most randomness used within this class.
      */
-    //private static final Random urn = new Random(System.currentTimeMillis());
-    private static final Random urn = new Random();
+    private static final Random urn = new Random(System.currentTimeMillis());
+    //private static final Random urn = new Random();
     /**
      * The set of characters that is allowed in this universe for evolution.
      */
@@ -116,9 +116,9 @@ public class Genome implements Comparable<Genome> {
      * selected character
      */
     public void mutate() {
-        if (randomTrial()) geneticSet.add(shakeUrn(geneticSet.size()), set[shakeUrn(set.length)]);
+        if (randomTrial()) geneticSet.add(shakeUrn(geneticSet.size() + 1), set[shakeUrn(set.length)]);
         if (geneticSet.size() > 1 && randomTrial()) geneticSet.remove(shakeUrn(geneticSet.size()));
-        for (int i = 0; i < geneticSet.size(); i++) if (randomTrial()) geneticSet.set(i, set[shakeUrn(set.length)]);
+        for (int i =0; i < geneticSet.size(); i++) if (randomTrial()) geneticSet.set(i, set[shakeUrn(set.length)]);
         setFitness();
     }
 
@@ -141,7 +141,7 @@ public class Genome implements Comparable<Genome> {
      */
 
     public void crossover(Genome other) {
-        int geneLength = (geneticSet.size() > other.geneticSet.size()) ? geneticSet.size() : other.geneticSet.size();
+        int geneLength = max(geneticSet.size(), other.geneticSet.size());
         ArrayList<Character> temp = new ArrayList<Character>();
         //LinkedList<Character> temp = new LinkedList<Character>();
         //Vector<Character> temp = new Vector<Character>(geneLength);
@@ -157,6 +157,7 @@ public class Genome implements Comparable<Genome> {
             }   
         }
         geneticSet = temp;
+        setFitness();
     }
     //inmate number: 1700088761 icaregifts.com
     /**
@@ -182,11 +183,8 @@ public class Genome implements Comparable<Genome> {
         int n = geneticSet.size();
         int m = target.length;
         fitness = abs_diff(m, n) << 1;//|m - n| * 2
-        int l = max(n, m); //min(n,m)
-        for (int i = 0; i < l; i++) {
-            if (i < geneticSet.size() && i < m && geneticSet.get(i) != target[i]) fitness++;
-            if (n + i < l) fitness++;
-        }
+        int l = min(n, m); //min(n,m)
+        for (int i = 0; i < l; i++) if (i < geneticSet.size() && i < m && geneticSet.get(i) != target[i]) fitness++;
     }
     /**
      * This is the extra credit portion. I don't know what the best way to submit this code for grading. 
@@ -203,11 +201,11 @@ public class Genome implements Comparable<Genome> {
         for (int j = 0; j <= n; j++)
             D[j][0] = j;
     
-        for (int j = 1; j <= m; j++) {
-            for (int i = 1; i <= n; i++) {
-                D[i][j] = (geneticSet.get(i - 1) == target[j - 1]) ? D[i - 1][j - 1] : min3(D[i - 1][j] + 1, D[i][j - 1] + 1, D[i - 1][j - 1] + 1);
-            }
-        }
+        for (int j = 1; j <= m; j++) for (int i = 1; i <= n; i++) D[i][j] = (geneticSet.get(i - 1) == target[j - 1]) ? 
+                                                                  D[i - 1][j - 1] : 
+                                                                  min3(D[i - 1][j] + 1, D[i][j - 1] + 1, D[i - 1][j - 1] + 1);
+            
+        
         fitness = D[n][m] + (abs_diff(m, n) + 1) >> 1;
         //fitness = D[n][m];
     }

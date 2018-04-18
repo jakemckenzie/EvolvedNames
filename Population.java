@@ -10,8 +10,8 @@ public class Population {
     /**
      * The urn used for most randomness used within this class.
      */
-    //private static final Random urn = new Random(System.currentTimeMillis());
-    private static final Random urn = new Random();
+    private static final Random urn = new Random(System.currentTimeMillis());
+    //private static final Random urn = new Random();
     /**
      * The population set for evolution. Populations (or gene pools) evolve as gene frequencies change; individual organism cannot evolve.
      * "The population is the so-called unit of evolution. Genes, individuals, and species also play a role, but it is the change in populations 
@@ -55,22 +55,16 @@ public class Population {
         Collections.sort(populationSet);
         for (int i = populationSet.size() >> 1; i < populationSet.size(); i++) populationSet.remove(i);
         Genome gene;
-        while (numGenomes > populationSet.size()) {
-            switch(urn.nextInt(2)) {
-                case 0:
-                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size())));
-                gene.mutate();
-                populationSet.add(gene);
-                break;
-                case 1:
-                gene = new Genome(populationSet.get(urn.nextInt(populationSet.size())));
-                gene.crossover(populationSet.get(urn.nextInt(populationSet.size())));
-                gene.mutate();
-                populationSet.add(gene);
-                break;
-            }
+        //int i = 0;
+        for (int j =  numGenomes >> 1; j < numGenomes; j++) {
+            
+            gene = new Genome(populationSet.get(urn.nextInt(populationSet.size())));
+            if (urn.nextBoolean()) gene.crossover(populationSet.get(urn.nextInt(populationSet.size())));
+            gene.mutate();
+            populationSet.add(gene);
+            
         }
-        mostFit = null;
+        //mostFit = null;
         for (Genome g : populationSet) mostFit = (mostFit == null) ? g : (mostFit.compareTo(g) <= 0 ? mostFit : g);
     }
 
