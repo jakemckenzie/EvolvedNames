@@ -1,9 +1,19 @@
-import java.util.*;
 
 //cd Documents\Data Structures\Assignment2
 //javac Genome.java Population.java Main.java
-//import java.util.stream.Collector;
-//import java.util.stream.Stream;
+import java.util.stream.Collector;
+import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Vector;
+import java.util.TreeSet;
+import java.util.Random;
+
+/**
+ * For this project I worked alone. My name is Jake McKenzie. I specified to the grader that
+ * for certain segments of the assignment that I used Java 8 methods. Both the instructor and
+ * the grader told me this should be fine.
+ */
 /**
  * 
  * 
@@ -38,20 +48,20 @@ public class Genome implements Comparable<Genome> {
      * The target string is my instructor's name.
      */
     //private static final String target = "CHRISTOPHER PAUL MARRIOTT";
-    private final char[] target = { 'C', 'H', 'R', 'I', 'S', 'T', 'O', 'P', 'H', 'E', 'R', ' ',
-                                    'P', 'A', 'U', 'L', ' ',
-                                    'M', 'A', 'R', 'R', 'I', 'O', 'T', 'T' };
+    private final char[] target = { 'C', 'H', 'R', 'I', 'S', 'T', 'O', 'P', 'H', 'E', 'R', ' ', 'P', 'A', 'U', 'L', ' ',
+            'M', 'A', 'R', 'R', 'I', 'O', 'T', 'T' };
     /**
      * The urn used for most randomness used within this class.
      */
-    private static final Random urn = new Random(System.currentTimeMillis());
+    private static final Random urn = new Random(XORShift128plus());
+    //private static final Random urn = new Random(XORShift());
+    //private static final Random urn = new Random(System.currentTimeMillis());
     //private static final Random urn = new Random();
     /**
      * The set of characters that is allowed in this universe for evolution.
      */
-    public static char[] set = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-                                 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 
-                                 ' ', '-', '\'' };
+    public static char[] set = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',
+            'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' ', '-', '\'' };
     /**
      * This is the main genetic set used for evolution. We will evolve it to obtain the target.
      * Typicaly List is chosen for this but for random access and other libraries specific to
@@ -75,7 +85,7 @@ public class Genome implements Comparable<Genome> {
 
     public Genome(double mutationRate) {
         mutRate = mutationRate;
-        geneticSet = new ArrayList<Character>();
+        geneticSet = new ArrayList<Character>(25);
         //geneticSet = new LinkedList<Character>();
         //geneticSet = new Vector<Character>();
         //geneticSet = new TreeSet<Character>();
@@ -90,11 +100,12 @@ public class Genome implements Comparable<Genome> {
      */
     public Genome(Genome gene) {
         this.mutRate = gene.mutRate;
-        this.geneticSet = new ArrayList<Character>();
+        this.geneticSet = new ArrayList<Character>(25);
         //this.geneticSet = new LinkedList<Character>();
-        //this.geneticSet = new Vector<Character>();
+        //this.geneticSet = new Vector<Character>(25);
         //this.geneticSet = new TreeSet<Character>();
-        for (char c : gene.geneticSet) this.geneticSet.add(c);
+        for (char c : gene.geneticSet)
+            this.geneticSet.add(c);
         this.fitness = gene.fitness;
     }
 
@@ -116,9 +127,16 @@ public class Genome implements Comparable<Genome> {
      * selected character
      */
     public void mutate() {
-        if (randomTrial()) geneticSet.add(shakeUrn(geneticSet.size() + 1), set[shakeUrn(set.length)]);
-        if (geneticSet.size() > 1 && randomTrial()) geneticSet.remove(shakeUrn(geneticSet.size()));
-        for (int i =0; i < geneticSet.size(); i++) if (randomTrial()) geneticSet.set(i, set[shakeUrn(set.length)]);
+        if (randomTrial())
+            geneticSet.add(shakeUrn(geneticSet.size() + 1), set[shakeUrn(set.length)]);
+        if (geneticSet.size() > 1 && randomTrial())
+            geneticSet.remove(shakeUrn(geneticSet.size()));
+        for (int i = 0; i < geneticSet.size(); i++)
+            if (randomTrial()) {
+                geneticSet.set(i, set[shakeUrn(set.length)]);
+
+            }
+                
         setFitness();
     }
 
@@ -148,25 +166,25 @@ public class Genome implements Comparable<Genome> {
         //TreeSet<Character> temp = new TreeSet<Character>();
         for (int i = 0; i < geneLength; i++) {
             switch (urn.nextInt(2)) {
-                case 0: 
-                if (geneticSet.size() > i) temp.add(geneticSet.get(i));
+            case 0:
+                if (geneticSet.size() > i)
+                    temp.add(geneticSet.get(i));
                 break;
-                case 1: 
-                if (other.geneticSet.size() > i) temp.add(other.geneticSet.get(i));
+            case 1:
+                if (other.geneticSet.size() > i)
+                    temp.add(other.geneticSet.get(i));
                 break;
-            }   
+            }
         }
         geneticSet = temp;
         setFitness();
     }
+
     //inmate number: 1700088761 icaregifts.com
     /**
      * @return Returns the fitness of the Genome calculated using the following algorithm:
      * 
      */
-
-    
-    
 
     /**
      * setFitness(): sets the fitness using 
@@ -184,8 +202,11 @@ public class Genome implements Comparable<Genome> {
         int m = target.length;
         fitness = abs_diff(m, n) << 1;//|m - n| * 2
         int l = min(n, m); //min(n,m)
-        for (int i = 0; i < l; i++) if (i < geneticSet.size() && i < m && geneticSet.get(i) != target[i]) fitness++;
+        for (int i = 0; i < l; i++)
+            if (i < geneticSet.size() && i < m && geneticSet.get(i) != target[i])
+                fitness++;
     }
+
     /**
      * This is the extra credit portion. I don't know what the best way to submit this code for grading. 
      * If you comment out the function above and run this line of code instead it should just go.
@@ -193,30 +214,47 @@ public class Genome implements Comparable<Genome> {
 
     /*
     public void setFitness() {
-        int n = geneticSet.size();
-        int m = target.length;
-        int[][] D = new int[n + 1][m + 1];
-        for (int i = 0; i <= m; i++)
-            D[0][i] = i;
-        for (int j = 0; j <= n; j++)
-            D[j][0] = j;
     
-        for (int j = 1; j <= m; j++) for (int i = 1; i <= n; i++) D[i][j] = (geneticSet.get(i - 1) == target[j - 1]) ? 
-                                                                  D[i - 1][j - 1] : 
-                                                                  min3(D[i - 1][j] + 1, D[i][j - 1] + 1, D[i - 1][j - 1] + 1);
+     //This is a functional programming way of initializing a 2d array.
+     //I commented it out in fear that it would not compile if you were
+     //using Java 7 or lower. I left it in because I think it's an elegant
+     //way to initialize a 2d array without a loop.
+     
+     //*****Please leaved commented.******
+     
+    //
+    //    IntStream.range(1, row)
+    //             .mapToObj(r -> IntStream.range(1, row)
+    //             .mapToObj(c -> new Integer(r,c))
+    //             .toArray(Integer[]::new))
+    //             .toArray(Integer[][]::new);
+    //}
+    
+     
+    
+    int n = geneticSet.size();
+    int m = target.length;
+    int[][] D = new int[n + 1][m + 1];for(
+    int i = 0;i<=m;i++)D[0][i]=i;for(
+    int j = 0;j<=n;j++)D[j][0]=j;
+    
+    for(
+    int j = 1;j<=m;j++)for(
+    int i = 1;i<=n;i++)D[i][j]=(geneticSet.get(i-1)==target[j-1])?D[i-1][j-1]:
+    
+    min3(D[i - 1][j] + 1, D[i][j - 1] + 1, D[i - 1][j - 1] + 1);
             
         
         fitness = D[n][m] + (abs_diff(m, n) + 1) >> 1;
-        //fitness = D[n][m];
-    }
-    */
+        //fitness = D[n][m]; ask Chris about this
+    }*/
 
     /**
-     * I implemented the algorithm you gave us and searched for methods which could improve on this.
+     * I implemented the algorithm also, It appears to work similarly to your alrogithm. I didn't have
+     * a deep understanding of what was going on but I was looking into how I could improve on what you gave us.
+     * 
+     * This is not the extra credit as Marriot specified but my own meanderings. That is above.
      * https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance#C
-     * @param a The current character set.
-     * @param b The targert character set.
-     * @return returns the levenshtein distance.
      */
     /*
     /*public void setFitness() {
@@ -248,6 +286,7 @@ public class Genome implements Comparable<Genome> {
     public int max(int n, int m) {
         return n ^ ((n ^ m) & -(n < m ? 1 : 0));
     }
+
     /**
      * @param n left sided variable
      * @param m right sided variable
@@ -256,7 +295,7 @@ public class Genome implements Comparable<Genome> {
      * 
      * also: https://graphics.stanford.edu/~seander/bithacks.html#IntegerMinOrMax
      */
-    public int min(int n, int m){
+    public int min(int n, int m) {
         return m ^ ((n ^ m) & -(n < m ? 1 : 0));
     }
 
@@ -270,29 +309,18 @@ public class Genome implements Comparable<Genome> {
     /**
      * Computers the absolute difference
      * pg 33 Hacker's Delight Warren et al
+     * 
+     * This algorithm is patented but this is educational use so it should be fine to use?
+     * 
+     * It doesn't come directly from hacker's delight but from the stanford link from above.
+     * I got the idea to look for this from Hacker's Delight
      */
     public int abs_diff(int a, int b) {
         int a_b = a - b;
         int shift = a_b >> 31;
-        return (a_b ^ shift) - (shift);//this algorithm is patented
+        return (a_b ^ shift) - (shift);
     }
 
-    /**
-     * This is a functional programming way of initializing a 2d array.
-     * I commented it out in fear that it would not compile if you were
-     * using Java 7 or lower.
-     */
-    /*
-    public Integer[][] intializeArray(int row, int column) {
-    
-        return IntStream.range(1, row)
-                        .mapToObj(r -> IntStream.range(1, row)
-                        .mapToObj(c -> new Integer(r,c))
-                        .toArray(Integer[]::new))
-                        .toArray(Integer[][]::new);
-    
-    }
-    */
     /**
      * This function will display the Genome’s character string and fitness in an easy to read format.
      * @return String used for printing the fitness to cmdline
@@ -306,4 +334,18 @@ public class Genome implements Comparable<Genome> {
         return result;
     }
 
-}
+    private static long XORShift() {
+        long x = System.currentTimeMillis();
+        x ^= (x << 21);
+        x ^= (x >>> 35);
+        x ^= (x << 4);
+        return x;
+    }
+    private static long XORShift128plus() {
+        long x = System.currentTimeMillis();
+        long y = XORShift();    
+        x ^= (x << 23);
+        long z = x ^ y ^ (x >> 26);
+        return z + x;
+    }
+}   

@@ -1,4 +1,11 @@
-import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Vector;
+import java.util.TreeSet;
+import java.util.Random;
+import java.util.Collections;
 
 public class Population {
     /**
@@ -10,7 +17,9 @@ public class Population {
     /**
      * The urn used for most randomness used within this class.
      */
-    private static final Random urn = new Random(System.currentTimeMillis());
+    private static final Random urn = new Random(XORShift128plus());
+    //private static final Random urn = new Random(XORShift());
+    //private static final Random urn = new Random(System.currentTimeMillis());
     //private static final Random urn = new Random();
     /**
      * The population set for evolution. Populations (or gene pools) evolve as gene frequencies change; individual organism cannot evolve.
@@ -36,7 +45,8 @@ public class Population {
         //populationSet = new LinkedList<Genome>();
         //populationSet = new Vector<Genome>(numGenomes);
         //populationSet = new TreeSet<Genome>();
-        for (int i = 0; i < numGenomes; i++) populationSet.add(new Genome(mutationRate));
+        for (int i = 0; i < numGenomes; i++)
+            populationSet.add(new Genome(mutationRate));
         Collections.sort(populationSet);
         mostFit = populationSet.get(0);
     }
@@ -53,19 +63,33 @@ public class Population {
      */
     public void day() {
         Collections.sort(populationSet);
-        for (int i = populationSet.size() >> 1; i < populationSet.size(); i++) populationSet.remove(i);
+        for (int i = populationSet.size() >> 1; i < populationSet.size(); i++)
+            populationSet.remove(i);
         Genome gene;
-        //int i = 0;
-        for (int j =  numGenomes >> 1; j < numGenomes; j++) {
-            
+        for (int j = numGenomes >> 1; j < numGenomes; j++) {
             gene = new Genome(populationSet.get(urn.nextInt(populationSet.size())));
-            if (urn.nextBoolean()) gene.crossover(populationSet.get(urn.nextInt(populationSet.size())));
+            if (urn.nextBoolean())
+                gene.crossover(populationSet.get(urn.nextInt(populationSet.size())));
             gene.mutate();
             populationSet.add(gene);
-            
         }
-        //mostFit = null;
-        for (Genome g : populationSet) mostFit = (mostFit == null) ? g : (mostFit.compareTo(g) <= 0 ? mostFit : g);
+        mostFit = null;
+        for (Genome g : populationSet)
+            mostFit = (mostFit == null) ? g : (mostFit.compareTo(g) <= 0 ? mostFit : g);
     }
 
+    private static long XORShift() {
+        long x = System.currentTimeMillis();
+        x ^= (x << 21);
+        x ^= (x >>> 35);
+        x ^= (x << 4);
+        return x;
+    }
+    private static long XORShift128plus() {
+        long x = System.currentTimeMillis();
+        long y = XORShift();    
+        x ^= (x << 23);
+        long z = x ^ y ^ (x >> 26);
+        return z + x;
+    }
 }
