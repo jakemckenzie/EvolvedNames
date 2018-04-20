@@ -77,6 +77,14 @@ public class Population {
         for (Genome g : populationSet)
             mostFit = (mostFit == null) ? g : (mostFit.compareTo(g) <= 0 ? mostFit : g);
     }
+    /**
+     * I implemented these after reading about how Java random works. Essentially they exist to make
+     * better psuedo-random seeds. My average day count and standard deviation decreased after I 
+     * implemented these.
+     * 
+     * https://en.wikipedia.org/wiki/Xorshift
+     * https://www.javamex.com/tutorials/random_numbers/xorshift.shtml#.Wtmgwi7wZEY
+     */
 
     private static long XORShift() {
         long x = System.currentTimeMillis();
