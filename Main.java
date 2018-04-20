@@ -44,7 +44,7 @@ public class Main {
         //System.out.println("The average run time is " + runtime + " miliseconds");
         //testGenome();
         //testPopulation();
-        testFinal(1000);
+        //testFinal(1000);
     }
 
     private static void testGenome() {
